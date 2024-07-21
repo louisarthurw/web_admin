@@ -2,6 +2,8 @@
 	// @ts-nocheck
 
 	import Swal from 'sweetalert2';
+	import { goto } from '$app/navigation';
+	import { user_id_login } from '../stores';
 
 	let usernameinput = '';
 	let passwordinput = '';
@@ -31,17 +33,21 @@
 
 			const result = await response.json();
 			// console.log('result: ', result);
-			console.log('user id: ', result.data.id);
 			// console.log('message: ', result.message);
 
 			if (result.status === 200) {
+				user_id_login.set(result.data.id)
+				console.log('user id: ', result.data.id);
+
 				usernameinput = '';
 				passwordinput = '';
-				
+
 				Swal.fire({
 					icon: 'success',
 					title: 'Login berhasil!',
 					text: result.message
+				}).then(() => {
+					goto('/home');
 				});
 			} else {
 				Swal.fire({
