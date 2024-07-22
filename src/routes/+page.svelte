@@ -4,6 +4,14 @@
 	import Swal from 'sweetalert2';
 	import { goto } from '$app/navigation';
 	import { user_id_login } from '../stores';
+	import { user_name_login } from '../stores';
+	import { nama_lengkap_login } from '../stores';
+	import { email_login } from '../stores';
+	import { nomor_telepon_login } from '../stores';
+	import { alamat_login } from '../stores';
+	import { tanggal_lahir_login } from '../stores';
+	import { jenis_kelamin_login } from '../stores';
+	import { foto_profil_login } from '../stores';
 
 	let usernameinput = '';
 	let passwordinput = '';
@@ -19,7 +27,7 @@
 		// console.log('Payload:', payload);
 
 		try {
-			const response = await fetch('http://localhost:2681/user', {
+			const response = await fetch('http://localhost:2681/user/auth', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -32,12 +40,21 @@
 			// console.log('response: ', response);
 
 			const result = await response.json();
-			// console.log('result: ', result);
+			console.log('result: ', result);
 			// console.log('message: ', result.message);
 
 			if (result.status === 200) {
 				user_id_login.set(result.data.id)
-				console.log('user id: ', result.data.id);
+				user_name_login.set(result.data.username)
+				nama_lengkap_login.set(result.data.nama_lengkap)
+				email_login.set(result.data.email)
+				nomor_telepon_login.set(result.data.nomor_telepon)
+				alamat_login.set(result.data.alamat)
+				tanggal_lahir_login.set(result.data.tanggal_lahir)
+				jenis_kelamin_login.set(result.data.jenis_kelamin)
+				foto_profil_login.set(result.data.foto_profil)
+
+				// console.log('user id: ', result.data.id);
 
 				usernameinput = '';
 				passwordinput = '';
