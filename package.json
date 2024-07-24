@@ -32,6 +32,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"sweetalert2": "^11.12.2"
+		"sweetalert2": "^11.12.3"
 	}
 }
