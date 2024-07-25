@@ -32,6 +32,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@maptiler/sdk": "^2.2.1",
+		"maplibre-gl": "^4.5.0",
 		"sweetalert2": "^11.12.3"
 	}
 }

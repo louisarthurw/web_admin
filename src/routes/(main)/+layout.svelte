@@ -1,8 +1,8 @@
 <script>
 	// @ts-nocheck
 
-	import Menu from '$lib/Menu.svelte';
-	import Navbar from '$lib/Navbar.svelte';
+	import Menu from '$lib/components/Menu.svelte';
+	import Navbar from '$lib/components/Navbar.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 
@@ -29,6 +29,7 @@
 	<Menu title="User" href="/user" active={$page.url.pathname === '/user'}></Menu>
 </Navbar>
 
-<div class="p-4">
-	<slot />
-</div>
+<slot />
+
+<!-- <div class="p-4">
+</div> -->
