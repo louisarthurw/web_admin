@@ -5,19 +5,33 @@
 
 	let map;
 	let mapContainer;
+	let mapController;
+	const apiKey = 'Y8hoteSrnHNMgKTo6vpx';
 
-	const initialState = { lng: 116.0012, lat: -2.149, zoom: 4.3 };
+	let GeocodingControl;
+	let maptilersdk;
+
+	const initialState = { lng: 116.0012, lat: -2.0149, zoom: 4.5 };
 
 	const markersData = [
 		{ lng: 112.738035, lat: -7.339264, name: 'Gedung P' },
 		{ lng: 106.816666, lat: -6.2, name: 'Gedung Jakarta' },
-		{ lng: 116.0012, lat: -0.5149, name: 'Center Point' }
+		{ lng: 115.0012, lat: -0.5149, name: 'Center Point' }
 	];
 
 	onMount(async () => {
 		if (mapContainer) {
-			const { Map, MapStyle, Marker, config } = await import('@maptiler/sdk');
-			config.apiKey = 'Y8hoteSrnHNMgKTo6vpx';
+			const sdkModule = await import('@maptiler/sdk');
+			const { Map, MapStyle, Marker, config } = sdkModule;
+			const { createMapLibreGlMapController } = await import(
+				'@maptiler/geocoding-control/maplibregl'
+			);
+			config.apiKey = apiKey;
+
+			GeocodingControl = (
+				await import('@maptiler/geocoding-control/svelte/GeocodingControl.svelte')
+			).default;
+			maptilersdk = await import('@maptiler/sdk');
 
 			map = new Map({
 				container: mapContainer,
@@ -25,6 +39,8 @@
 				center: [initialState.lng, initialState.lat],
 				zoom: initialState.zoom
 			});
+
+			mapController = createMapLibreGlMapController(map, maptilersdk);
 
 			markersData.forEach((markerData) => {
 				const marker = new Marker({ color: '#FF0000' })
@@ -47,13 +63,18 @@
 
 <div class="map-wrap">
 	<div class="map" bind:this={mapContainer}></div>
+	{#if mapController}
+		<div class="geocoding">
+			<svelte:component this={GeocodingControl} {mapController} {apiKey} {maptilersdk} country={["ID"]} placeholder="Insert Location" limit=8/> 
+		</div>
+	{/if}
 </div>
 
 <style>
 	.map-wrap {
 		position: relative;
 		width: 100%;
-		height: calc(100vh - 68.8px); /* calculate height of the screen minus the heading */
+		height: calc(100vh - 117.6px); /* calculate height of the screen minus the heading */
 	}
 
 	.map {
@@ -62,9 +83,15 @@
 		height: 100%;
 	}
 
+	.geocoding {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+	}
+
 	@media (max-width: 767px) {
 		.map-wrap {
-			height: calc(100vh - 48.8px);
+			height: calc(100vh - 97.6px);
 		}
 	}
 </style>

@@ -37,7 +37,7 @@
 		>
 			<div class="mt-8 mb-2">
 				<input
-					class="w-full px-3 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E]"
+					class="w-full px-3 py-1 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] placeholder-gray-400"
 					id="username"
 					name="username"
 					type="text"
@@ -47,7 +47,7 @@
 			</div>
 			<div class="mt-1 mb-16">
 				<input
-					class="w-full px-3 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E]"
+					class="w-full px-3 py-1 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] placeholder-gray-400"
 					id="password"
 					name="password"
 					type="password"

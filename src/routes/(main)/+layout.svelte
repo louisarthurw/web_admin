@@ -1,14 +1,18 @@
 <script>
 	// @ts-nocheck
-
-	import Menu from '$lib/components/Menu.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
-	let userInfo = { nama_lengkap: 'ADMIN', foto_profil: 'default_profile_icon.png' };
+	let userInfo = {
+		nama_lengkap: 'ADMIN',
+		foto_profil: 'default_profile_icon.png',
+		email: 'adminn@gmail.com'
+	};
+	let isDataFetched = false;
+	let currentPage = '';
 
-	onMount(() => {
+	async function fetchUserInfo() {
 		const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
 			const [name, value] = cookie.split('=');
 			acc[name] = value;
@@ -17,19 +21,22 @@
 
 		if (cookies.auth) {
 			userInfo = JSON.parse(decodeURIComponent(cookies.auth));
-			// console.log("user info: ", userInfo);
 		}
+		isDataFetched = true;
+	}
+
+	onMount(() => {
+		fetchUserInfo();
+		console.log(userInfo);
 	});
 </script>
 
-<Navbar nama_lengkap={userInfo.nama_lengkap} foto_profil={userInfo.foto_profil}>
-	<Menu title="Home" href="/home" active={$page.url.pathname === '/home'}></Menu>
-	<Menu title="Surveyor" href="/surveyor" active={$page.url.pathname === '/surveyor'}></Menu>
-	<Menu title="Asset" href="/aset" active={$page.url.pathname === '/aset'}></Menu>
-	<Menu title="User" href="/user" active={$page.url.pathname === '/user'}></Menu>
-</Navbar>
-
-<slot />
-
-<!-- <div class="p-4">
-</div> -->
+{#if isDataFetched}
+	<Navbar
+		nama_lengkap={userInfo.nama_lengkap}
+		foto_profil={userInfo.foto_profil}
+		email={userInfo.email}
+		currentPage={$page.url.pathname}
+	></Navbar>
+	<slot />
+{/if}

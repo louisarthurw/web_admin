@@ -36,7 +36,11 @@ export const actions = {
                 alamat: result.data.alamat,
                 tanggal_lahir: result.data.tanggal_lahir,
                 jenis_kelamin: result.data.jenis_kelamin,
-                foto_profil: result.data.foto_profil
+                foto_profil: result.data.foto_profil,
+                nama_privilege: result.data.nama_privilege,
+                privilege_id: result.data.privilege_id,
+                role_id: result.data.role_id,
+                role_nama: result.data.role_nama
             };
 
             cookies.set('auth', JSON.stringify(authValue), {
