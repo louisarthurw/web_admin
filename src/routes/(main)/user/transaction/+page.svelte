@@ -22,7 +22,7 @@
 				<h3 class="text-2xl font-bold text-[#18294E]">{transaction.assetName}</h3>
 				<p class="text-[#18294E] text-md">{transaction.name}</p>
 			</div>
-			<div class="flex {transaction.date ? '' : 'items-center'}">
+			<div class="flex {transaction.date ? '' : 'my-auto'}">
 				{#if transaction.date}
 					<p class="text-md text-[#18294E]">{transaction.date}</p>
 				{:else}

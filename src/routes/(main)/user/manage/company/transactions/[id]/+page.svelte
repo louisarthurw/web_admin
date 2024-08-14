@@ -2,28 +2,27 @@
 	// @ts-nocheck
 	import { page } from '$app/stores';
 	import Navbar4 from '$lib/components/Navbar4.svelte';
-	import { users } from '$lib/user';
+	import { companies } from '$lib/company';
 	import { goto } from '$app/navigation';
 
-	let userId = $page.params.id;
-	let user = users.find((u) => u.id == userId);
+	let companyId = $page.params.id;
+	let company = companies.find((c) => c.id == companyId);
 
 	function handleAddMeeting(transactionIndex) {
-		goto(`/user/manage/meeting/${user.id}/${transactionIndex}`);
+		goto(`/user/manage/company/meeting/${company.id}/${transactionIndex}`);
 	}
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
-
 <div
-	class={`bg-gray-100 p-6 ${user.transactionDetail.length === 0 ? 'flex items-center justify-center' : ''}`}
+	class={`bg-gray-100 p-6 ${company.transactionDetail.length === 0 ? 'flex items-center justify-center' : ''}`}
 	style="min-height: calc(100vh - 117.6px);"
 >
-	{#if user.transactionDetail.length === 0}
+	{#if company.transactionDetail.length === 0}
 		<p class="text-gray-500 text-2xl">Belum ada transaksi</p>
 	{:else}
 		<div class="container mx-auto w-[90vw]">
-			{#each user.transactionDetail as transaction, index}
+			{#each company.transactionDetail as transaction, index}
 				<h2 class="text-[#18294E] text-2xl font-bold mb-2">{transaction.name}</h2>
 				<div class="p-4 rounded-md bg-white mb-4">
 					{#if transaction.detail}

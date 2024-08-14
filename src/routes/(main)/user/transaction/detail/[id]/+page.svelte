@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+	// @ts-nocheck
 
 	import Navbar4 from '$lib/components/Navbar4.svelte';
 	import { page } from '$app/stores';
@@ -46,11 +46,15 @@
 		showDeclinePopup = false;
 		declineReason = '';
 	};
-
+	
 	const sendDeclineReason = () => {
-		alert(`Decline reason: ${declineReason}`);
-		closeDeclinePopup();
-		goto('/user/transaction');
+		if (declineReason.trim() === '') {
+			alert('decline reason harus diisi!');
+		} else {
+			alert(`Decline reason: ${declineReason}`);
+			closeDeclinePopup();
+			goto('/user/transaction');
+		}
 	};
 
 	function setMeeting(id) {
@@ -59,7 +63,7 @@
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		setMeeting(transactionId); 
+		setMeeting(transactionId);
 	};
 </script>
 

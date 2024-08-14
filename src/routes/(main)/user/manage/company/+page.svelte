@@ -25,6 +25,10 @@
 	function handleNameClick() {
 		goto(`/user/manage`);
 	}
+
+	function handleTotalTransactionClick(transactionId) {
+		goto(`/user/manage/company/transactions/${transactionId}`);
+	}
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
@@ -73,7 +77,12 @@
 						</td>
 						<td class="py-2 px-4">{company.companyId}</td>
 						<td class="py-2 px-4">{company.userCount}</td>
-						<td class="py-2 px-4">{company.totalTransaction}</td>
+						<td class="py-2 px-4"
+							><button
+								on:click={() => handleTotalTransactionClick(company.id)}
+								class="cursor-pointer focus:outline-none">{company.totalTransaction}</button
+							></td
+						>
 					</tr>
 				{/each}
 			</tbody>
