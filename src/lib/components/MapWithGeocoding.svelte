@@ -65,7 +65,7 @@
 	<div class="map" bind:this={mapContainer}></div>
 	{#if mapController}
 		<div class="geocoding">
-			<svelte:component this={GeocodingControl} {mapController} {apiKey} {maptilersdk} country={["ID"]} placeholder="Insert Location" limit=8/> 
+			<GeocodingControl {mapController} {apiKey} {maptilersdk} country={["ID"]} placeholder="Insert Location" limit=8/> 
 		</div>
 	{/if}
 </div>

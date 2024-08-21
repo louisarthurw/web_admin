@@ -40,7 +40,7 @@
 			placeholder="Search User"
 			bind:value={searchQuery}
 			on:input={handleSearch}
-			class="flex-grow border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+			class="flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 		/>
 	</div>
 
@@ -69,7 +69,7 @@
 							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
 							<button
 								on:click={() => handleEdit(user.id)}
-								class="cursor-pointer focus:outline-none"
+								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
 							>
 								{user.name}
 							</button>
@@ -79,7 +79,7 @@
 						<td class="py-2 px-4"
 							><button
 								on:click={() => handleTotalTransactionClick(user.id)}
-								class="cursor-pointer focus:outline-none">{user.totalTransaction}</button
+								class="cursor-pointer focus:outline-none font-semibold">{user.totalTransaction}</button
 							></td
 						>
 					</tr>

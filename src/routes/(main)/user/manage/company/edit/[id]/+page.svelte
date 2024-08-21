@@ -64,7 +64,7 @@
 				type="text"
 				placeholder="Company ID"
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-				required
+				disabled
 			/>
 		</div>
 		<div>

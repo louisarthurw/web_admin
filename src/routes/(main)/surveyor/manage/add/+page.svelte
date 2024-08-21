@@ -35,7 +35,6 @@
 
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
 
-<!-- <div class="flex flex-col bg-[#F3F4F6] p-8 w-full h-[calc(100vh - 117.6px)] space-y-6"> -->
 <div class="flex flex-col bg-gray-100 p-8 w-full space-y-6" style="min-height: calc(100vh - 117.6px);">
 	<h1 class="text-3xl font-bold text-[#18294E]">Input Data New Surveyor</h1>
 	<form class="space-y-4" on:submit|preventDefault={handleAdd}>
@@ -46,13 +45,13 @@
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
-		<input
+		<!-- <input
 			bind:value={workerId}
 			type="text"
 			placeholder="Worker ID"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
-		/>
+		/> -->
 		<input
 			bind:value={email}
 			type="email"
