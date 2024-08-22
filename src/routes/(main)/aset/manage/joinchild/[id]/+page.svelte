@@ -8,7 +8,7 @@
 	let id = $page.params.id;
 	let asset = assets.find((a) => a.id == id);
 
-	let childAssets = asset.child;
+	let childAssets = asset.child.filter((child) => child.status === 'active');;
 	let selectedIds;
 
 	if (childAssets.length === 0) {
@@ -21,6 +21,13 @@
 
 	const handleBack = () => {
 		goto(`/aset/manage/overview/${id}`);
+	};
+
+	const generateNewAssetId = () => {
+		let maxIdNumber = Math.max(
+			...childAssets.map((child) => parseInt(child.assetId.split('.').pop()))
+		);
+		return `${asset.assetId}.${maxIdNumber + 1}`;
 	};
 
 	const handleJoin = () => {
@@ -40,6 +47,7 @@
 		// console.log(selectedChilds)
 
 		let joinedChild = {
+			assetId: generateNewAssetId(),
 			name: '-',
 			type: '-',
 			statusAsset: '-',
@@ -49,19 +57,23 @@
 			powerOfAttorney: '-',
 			tags: '-',
 			usage: '-',
-			condition: '-',
-			coordinateBoundaries: '-',
 			totalValue: selectedChilds.reduce((sum, child) => sum + child.totalValue, 0),
 			totalArea: selectedChilds.reduce((sum, child) => sum + child.totalArea, 0),
-			assetId: selectedChilds.reduce(
-				(min, child) => (child.assetId < min ? child.assetId : min),
-				selectedChilds[0].assetId
-			)
+			condition: '-',
+			coordinateBoundaries: '-',
+			idJoin: selectedChilds.map((child) => child.assetId),
+			status: 'active'
 		};
 		// console.log('Aset yang digabung: ', joinedChild);
 
-		asset.child = childAssets.filter((child) => !selectedIds.includes(child.assetId));
+		childAssets.forEach((child) => {
+			if (selectedIds.includes(child.assetId)) {
+				child.status = 'inactive';
+			}
+		});
+
 		asset.child.push(joinedChild);
+		console.log('child: ', asset.child);
 
 		goto(`/aset/manage/overview/${id}`);
 	};
@@ -77,10 +89,6 @@
 		if (selectedIds.length > 1) {
 			selectedIds = selectedIds.filter((_, i) => i !== index);
 		}
-		// console.log('selected id: ', selectedIds);
-	};
-
-	const handleSelectChange = () => {
 		// console.log('selected id: ', selectedIds);
 	};
 </script>
@@ -104,7 +112,6 @@
 							? 'text-gray-500'
 							: 'text-black'}"
 						bind:value={selectedIds[index]}
-						on:change={handleSelectChange}
 					>
 						<option value="" disabled selected>Choose Asset ID</option>
 						{#each childAssets as child}

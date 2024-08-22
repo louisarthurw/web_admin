@@ -13,7 +13,7 @@
 
 	function saveChanges() {
 		asset.access = access;
-		alert('berhasil update access!')
+		alert('berhasil update access!');
 	}
 </script>
 
@@ -26,7 +26,7 @@
 			<img
 				src={asset.image}
 				alt="{asset.name} image {i + 1}"
-				class="w-32 h-32 object-cover rounded-md"
+				class="w-64 h-64 object-cover rounded-md"
 			/>
 		{/each}
 	</div>
@@ -36,7 +36,7 @@
 
 <div
 	class="px-8 sm:px-4 py-6 flex flex-col justify-between"
-	style="min-height: calc(100vh - 362.4px)"
+	style="min-height: calc(100vh - 490.4px)"
 >
 	<div class="flex-grow flex flex-col space-y-4 font-medium text-xl">
 		<label class="flex items-center space-x-2">
@@ -47,7 +47,7 @@
 				bind:group={access}
 				class="text-[#18294E] focus:ring-0 focus:outline-none"
 			/>
-			<span class="text-[#18294E]">Public</span>
+			<span class="text-[#18294E]">Ditawarkan</span>
 		</label>
 		<label class="flex items-center space-x-2">
 			<input
@@ -57,7 +57,7 @@
 				bind:group={access}
 				class="text-[#18294E] focus:ring-0 focus:outline-none"
 			/>
-			<span class="text-[#18294E]">Private</span>
+			<span class="text-[#18294E]">Tidak ditawarkan</span>
 		</label>
 	</div>
 

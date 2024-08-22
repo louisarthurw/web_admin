@@ -9,12 +9,18 @@
 	let assetId = $page.params.id;
 	let asset = assets.find((a) => a.id == assetId);
 
+	let activeChildAssets = asset.child.filter(child => child.status === 'active');
+
 	function createChild(id) {
 		goto(`/aset/manage/createchild/${id}`);
 	}
 
 	function joinChild(id) {
 		goto(`/aset/manage/joinchild/${id}`);
+	}
+
+	function editChild(childId) {
+		goto(`/aset/manage/editchild/${assetId}/${childId}`);
 	}
 </script>
 
@@ -27,7 +33,7 @@
 			<img
 				src={asset.image}
 				alt="{asset.name} image {i + 1}"
-				class="w-32 h-32 object-cover rounded-md"
+				class="w-64 h-64 object-cover rounded-md"
 			/>
 		{/each}
 	</div>
@@ -101,11 +107,11 @@
 	</div>
 
 	<div class="p-4 text-lg text-[#18294E] font-medium">
-		{#if asset.child && asset.child.length > 0}
+		{#if activeChildAssets.length > 0}
 			<h2 class="text-[#18294E] text-2xl font-bold mb-2">Child</h2>
 			<ul class="list-disc pl-5 space-y-4">
-				{#each asset.child as childAsset}
-					<li class="p-4 bg-white rounded-lg">
+				{#each activeChildAssets as childAsset}
+					<li class="p-4 bg-white rounded-lg cursor-pointer" on:click={() => editChild(childAsset.assetId)}>
 						<ul class="space-y-2">
 							<li class="flex">
 								<span class="min-w-[190px] font-semibold">Asset ID</span>
@@ -193,14 +199,14 @@
 				type="button"
 				class="w-1/6 px-4 py-2 font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
 				on:click={() => joinChild(assetId)}
-				>
+			>
 				Join Asset ID
 			</button>
 			<button
 				type="button"
 				class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
 				on:click={() => createChild(assetId)}
-				>
+			>
 				Add Asset ID
 			</button>
 			<div class="w-1/3"></div>

@@ -19,6 +19,12 @@
 			>
 				Management
 			</a>
+			<a
+				href="/surveyor/tasklist"
+				class={`self-center whitespace-nowrap text-lg text-white ${currentPage.startsWith('/surveyor/tasklist') ? 'border-b-4 border-white font-semibold' : 'mb-[4px]'}`}
+			>
+				Task List
+			</a>
 		</div>
 	</div>
 </div>

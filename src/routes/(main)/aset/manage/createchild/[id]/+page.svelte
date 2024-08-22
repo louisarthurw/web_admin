@@ -8,21 +8,21 @@
 	let id = $page.params.id;
 	let asset = assets.find((a) => a.id == id);
 
-    let assetId = '';
+	let assetId = '';
 	let name = '';
 	let type = '';
-    let statusAsset = '';
+	let statusAsset = '';
 	let legalityLetter = '';
 	let legalityNumber = '';
 	let legalityFile = '';
 	let powerOfAttorney = '';
-    let tags = '';
+	let tags = '';
 	let usage = '';
 	let totalValue = '';
-    let totalArea = '';
+	let totalArea = '';
 	let condition = '';
 	let coordinateBoundaries = '';
-	
+
 	const handleCancel = () => {
 		goto(`/aset/manage/overview/${id}`);
 	};
@@ -43,8 +43,10 @@
 			totalArea,
 			condition,
 			coordinateBoundaries,
+			idJoin: [],
+			status: 'active'
 		};
-		asset.child.push(newChild)
+		asset.child.push(newChild);
 		console.log(asset);
 		goto(`/aset/manage/overview/${id}`);
 	};

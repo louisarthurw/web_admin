@@ -19,7 +19,7 @@
 			<img
 				src={asset.image}
 				alt="{asset.name} image {i + 1}"
-				class="w-32 h-32 object-cover rounded-md"
+				class="w-64 h-64 object-cover rounded-md"
 			/>
 		{/each}
 	</div>

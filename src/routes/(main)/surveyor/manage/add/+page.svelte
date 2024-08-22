@@ -45,13 +45,13 @@
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
-		<!-- <input
+		<input
 			bind:value={workerId}
 			type="text"
 			placeholder="Worker ID"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
-		/> -->
+		/>
 		<input
 			bind:value={email}
 			type="email"

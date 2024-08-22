@@ -79,7 +79,9 @@ export const assets = [
                 totalValue: 2700000000,
                 totalArea: 500,
                 condition: 'Good',
-                coordinateBoundaries: '1. 111.1234, -7.7890\n2. 111.1236, -7.7892\n3. 111.1238, -7.7888\n4. 111.1235, -7.7886'
+                coordinateBoundaries: '1. 111.1234, -7.7890\n2. 111.1236, -7.7892\n3. 111.1238, -7.7888\n4. 111.1235, -7.7886',
+                idJoin: [],
+                status: 'active'
             },
             {
                 assetId: 'L0001.2',
@@ -95,7 +97,9 @@ export const assets = [
                 totalValue: 3800000000,
                 totalArea: 700,
                 condition: 'Good',
-                coordinateBoundaries: '1. 111.1250, -7.7900\n2. 111.1252, -7.7902\n3. 111.1248, -7.7898\n4. 111.1246, -7.7896'
+                coordinateBoundaries: '1. 111.1250, -7.7900\n2. 111.1252, -7.7902\n3. 111.1248, -7.7898\n4. 111.1246, -7.7896',
+                idJoin: [],
+                status: 'active'
             }
         ],
         access: 'Public',
@@ -233,7 +237,9 @@ export const assets = [
                 totalValue: 3250000000,
                 totalArea: 1000,
                 condition: 'Average',
-                coordinateBoundaries: `1. 115.4567, -7.8901\n2. 115.4570, -7.8905\n3. 115.4569, -7.8902\n4. 115.4568, -7.8899`
+                coordinateBoundaries: `1. 115.4567, -7.8901\n2. 115.4570, -7.8905\n3. 115.4569, -7.8902\n4. 115.4568, -7.8899`,
+                idJoin: [],
+                status: 'active'
             },
             {
                 assetId: 'L0002.2',
@@ -249,7 +255,9 @@ export const assets = [
                 totalValue: 3250000000,
                 totalArea: 1000,
                 condition: 'Average',
-                coordinateBoundaries: `1. 115.4580, -7.8910\n2. 115.4585, -7.8915\n3. 115.4579, -7.8908\n4. 115.4575, -7.8902`
+                coordinateBoundaries: `1. 115.4580, -7.8910\n2. 115.4585, -7.8915\n3. 115.4579, -7.8908\n4. 115.4575, -7.8902`,
+                idJoin: [],
+                status: 'active'
             },
             {
                 assetId: 'L0002.3',
@@ -265,7 +273,9 @@ export const assets = [
                 totalValue: 1500000000,
                 totalArea: 500,
                 condition: 'Good',
-                coordinateBoundaries: `1. 115.4572, -7.8904\n2. 115.4575, -7.8907\n3. 115.4571, -7.8901\n4. 115.4570, -7.8898`
+                coordinateBoundaries: `1. 115.4572, -7.8904\n2. 115.4575, -7.8907\n3. 115.4571, -7.8901\n4. 115.4570, -7.8898`,
+                idJoin: [],
+                status: 'active'
             }
         ],
         access: 'Public',
