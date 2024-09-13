@@ -2,53 +2,44 @@
 	// @ts-nocheck
 	import Navbar2 from '$lib/components/Navbar2.svelte';
 	import { page } from '$app/stores';
-	import { surveyRequests } from '$lib/surveyrequest.js';
-	import { assets } from '$lib/asset.js';
-	import { surveyors } from '$lib/surveyors.js';
 	import { goto } from '$app/navigation';
 
-	let searchQuery = '';
-	let filteredSurveyRequests = [];
-	filteredSurveyRequests = surveyRequests.slice().sort((a, b) => {
-		if (a.surveyStatus === 'Ongoing' && b.surveyStatus === 'Ongoing') {
-			return new Date(a.dateline) - new Date(b.dateline);
-		}
-		if (a.surveyStatus === 'Done' && b.surveyStatus === 'Done') {
-			return new Date(a.dateline) - new Date(b.dateline);
-		}
-		if (a.surveyStatus === 'Ongoing' && b.surveyStatus === 'Done') return -1;
-		if (a.surveyStatus === 'Done' && b.surveyStatus === 'Ongoing') return 1;
-		return 0;
-	});
 
-	console.log(filteredSurveyRequests);
+	export let data;
+	const surveyRequests = data.surveyRequests;
+	// console.log(surveyRequests);
+
+	let searchQuery = '';
+	let filteredSurveyRequests = surveyRequests.slice().sort(sortByStatusAndDateline);
+
+	function sortByStatusAndDateline(a, b) {
+		if (a.status_request === 'O' && b.status_request === 'O') {
+			return new Date(a.dateline) - new Date(b.dateline);
+		}
+		if (a.status_request === 'F' && b.status_request === 'F') {
+			return new Date(a.dateline) - new Date(b.dateline);
+		}
+		if (a.status_request === 'O' && b.status_request === 'F') return -1;
+		if (a.status_request === 'F' && b.status_request === 'O') return 1;
+		return 0;
+	}
 
 	function handleSearch() {
-		let results = [];
-
 		if (searchQuery.trim() === '') {
-			results = surveyRequests.slice();
+			filteredSurveyRequests = surveyRequests.slice().sort(sortByStatusAndDateline);
 		} else {
-			results = surveyRequests.filter((request) => {
-				const asset = assets.find((asset) => asset.id === request.assetId);
-				const surveyor = surveyors.find((surveyor) => surveyor.id === request.surveyorId);
-				return `${asset.name} ${asset.location} ${surveyor.name} ${request.surveyStatus} ${request.surveyStatus === 'Ongoing' ? formatDate(request.dateline) : ''}`
-					.toLowerCase()
-					.includes(searchQuery.toLowerCase());
-			});
+			filteredSurveyRequests = surveyRequests
+				.filter(
+					(request) =>
+						request.nama_asset.toLowerCase().includes(searchQuery.toLowerCase()) ||
+						request.status_request.toLowerCase().includes(searchQuery.toLowerCase()) ||
+						request.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase())
+					// request.status_request === 'O'
+					// 	? formatDate(request.dateline).toLowerCase().includes(searchQuery.toLowerCase())
+					// 	: '-'
+				)
+				.sort(sortByStatusAndDateline);
 		}
-
-		filteredSurveyRequests = results.sort((a, b) => {
-			if (a.surveyStatus === 'Ongoing' && b.surveyStatus === 'Ongoing') {
-				return new Date(a.dateline) - new Date(b.dateline);
-			}
-			if (a.surveyStatus === 'Done' && b.surveyStatus === 'Done') {
-				return new Date(a.dateline) - new Date(b.dateline);
-			}
-			if (a.surveyStatus === 'Ongoing' && b.surveyStatus === 'Done') return -1;
-			if (a.surveyStatus === 'Done' && b.surveyStatus === 'Ongoing') return 1;
-			return 0;
-		});
 	}
 
 	function formatDate(dateString) {
@@ -81,7 +72,7 @@
 	<div class="flex justify-center">
 		<table class="min-w-[90vw] bg-white text-center border border-gray-300">
 			<thead>
-				<tr>
+				<tr class="text-left">
 					<th class="py-2 px-4 text-[#18294E]">Asset Name</th>
 					<th class="py-2 px-4 text-[#18294E]">Address</th>
 					<th class="py-2 px-4 text-[#18294E]">Surveyor Name</th>
@@ -90,36 +81,28 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredSurveyRequests as request, i}
-					{#if assets && surveyors}
-						{#each assets.filter((asset) => asset.id === request.assetId) as asset}
-							{#each surveyors.filter((surveyor) => surveyor.id === request.surveyorId) as surveyor}
-								<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
-									<td class="py-2 px-4">{asset.name}</td>
-									<td class="py-2 px-4">{asset.location}</td>
-									<td class="py-2 px-4 flex justify-center items-center">
-										<img
-											src="/default_profile_icon.png"
-											alt="avatar"
-											class="w-8 h-8 rounded-full mr-2"
-										/>
-										<p class="text-[#18294E]">
-											{surveyor.name}
-										</p>
-									</td>
-									
-									<td class="py-2 px-4">{request.surveyStatus}</td>
-									{#if request.surveyStatus === 'Ongoing'}
-										<td class="py-2 px-4">{formatDate(request.dateline)}</td>
-									{:else}
-										<td class="py-2 px-4">-</td>
-									{/if}
-								</tr>
-							{/each}
-						{/each}
-					{/if}
+				{#each filteredSurveyRequests as surveyRequest, i}
+					<tr class="border-t text-left {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
+						<td class="py-2 px-4">{surveyRequest.nama_asset}</td>
+						<td class="py-2 px-4">{surveyRequest.alamat}</td>
+						<td class="py-2 px-4 flex items-center">
+							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
+							<p class="text-[#18294E]">
+								{surveyRequest.nama_lengkap}
+							</p>
+						</td>
+			
+						{#if surveyRequest.status_request === 'O'}
+							<td class="py-2 px-4">Ongoing</td>
+							<td class="py-2 px-4">{formatDate(surveyRequest.dateline)}</td>
+						{:else if surveyRequest.status_request === 'F'}
+							<td class="py-2 px-4">Finished</td>
+							<td class="py-2 px-4">-</td>
+						{/if}
+					</tr>
 				{/each}
 			</tbody>
+			
 		</table>
 	</div>
 </div>

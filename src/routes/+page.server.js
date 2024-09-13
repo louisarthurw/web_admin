@@ -1,5 +1,9 @@
 // @ts-nocheck
+import { server, auth } from '$lib/store';
 import { fail, redirect } from '@sveltejs/kit';
+import { get } from 'svelte/store';
+
+const serverDetails = get(server);
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -12,7 +16,7 @@ export const actions = {
             password: entries.password
         };
 
-        const response = await fetch('http://localhost:2681/user/auth', {
+        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/user/auth`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,19 +32,24 @@ export const actions = {
 
         if (result.status === 200) {
             const authValue = {
-                id: result.data.id,
-                username: result.data.username,
-                nama_lengkap: result.data.nama_lengkap,
-                email: result.data.email,
-                nomor_telepon: result.data.nomor_telepon,
                 alamat: result.data.alamat,
-                tanggal_lahir: result.data.tanggal_lahir,
-                jenis_kelamin: result.data.jenis_kelamin,
+                denied_by_admin: result.data.denied_by_admin,
+                email: result.data.email,
+                first_login: result.data.first_login,
                 foto_profil: result.data.foto_profil,
+                id: result.data.id,
+                jenis_kelamin: result.data.jenis_kelamin,
+                ktp: result.data.ktp,
+                nama_lengkap: result.data.nama_lengkap,
                 nama_privilege: result.data.nama_privilege,
+                nomor_telepon: result.data.nomor_telepon,
                 privilege_id: result.data.privilege_id,
                 role_id: result.data.role_id,
-                role_nama: result.data.role_nama
+                role_nama: result.data.role_nama,
+                status: result.data.status,
+                tanggal_lahir: result.data.tanggal_lahir,
+                tipe: result.data.tipe,
+                username: result.data.username
             };
 
             cookies.set('auth', JSON.stringify(authValue), {
@@ -50,6 +59,9 @@ export const actions = {
                 secure: false,
                 httpOnly: false
             });
+
+            auth.set(authValue);
+            console.log(get(auth))
 
             return { message: result.message }
         } else {

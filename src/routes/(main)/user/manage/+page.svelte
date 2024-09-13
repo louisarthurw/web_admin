@@ -3,8 +3,10 @@
 	import Navbar4 from '$lib/components/Navbar4.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { users } from '$lib/user';
 
+	export let data;
+	const users = data.users;
+	
 	let searchQuery = '';
 	let filteredUsers = users;
 
@@ -13,7 +15,7 @@
 			filteredUsers = users;
 		} else {
 			filteredUsers = users.filter((user) =>
-				`${user.name}`.toLowerCase().includes(searchQuery.toLowerCase())
+				`${user.nama} ${user.id} ${user.totalPerusahaan} ${user.totalTransaksi}`.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 		}
 	}
@@ -71,15 +73,16 @@
 								on:click={() => handleEdit(user.id)}
 								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
 							>
-								{user.name}
+								{user.nama}
 							</button>
 						</td>
-						<td class="py-2 px-4">{user.userId}</td>
-						<td class="py-2 px-4">{user.totalCompany}</td>
+						<td class="py-2 px-4">{user.id}</td>
+						<td class="py-2 px-4">{user.totalPerusahaan}</td>
 						<td class="py-2 px-4"
 							><button
 								on:click={() => handleTotalTransactionClick(user.id)}
-								class="cursor-pointer focus:outline-none font-semibold">{user.totalTransaction}</button
+								class="cursor-pointer focus:outline-none font-semibold"
+								>{user.totalTransaksi}</button
 							></td
 						>
 					</tr>

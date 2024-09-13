@@ -12,7 +12,11 @@ export const verifications = [
         ownershipDocument: 'Mekari_Ownership.pdf',
         companyDocument: 'Mekari_Legality.pdf',
         initialCapital: 'Rp. 1.500.000.000',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.'
+        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.',
+        status: '',
+        declineMessage: '',
+        class: '',
+        field: []
     },
     {
         id: 2,
@@ -27,7 +31,11 @@ export const verifications = [
         ownershipDocument: 'Latrust_Ownership.pdf',
         companyDocument: 'Latrust_Legality.pdf',
         initialCapital: 'Rp. 750.000.000',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.'
+        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.',
+        status: '',
+        declineMessage: '',
+        class: '',
+        field: []
     },
     {
         id: 3,
@@ -42,6 +50,10 @@ export const verifications = [
         ownershipDocument: 'Marco_Ownership.pdf',
         companyDocument: 'Marco_Legality.pdf',
         initialCapital: 'Rp. 2.000.000.000',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.'
+        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat doloremque explicabo voluptates expedita natus consequuntur ut, eius, eligendi eos consequatur pariatur enim quos dignissimos ullam. Eaque, odio tempore asperiores cupiditate magni sed cumque libero quibusdam labore sunt voluptatum rem iure similique necessitatibus tempora commodi. Necessitatibus non iusto ex alias reiciendis amet nesciunt. Ducimus necessitatibus inventore quos quis ea, recusandae fuga debitis est quidem et vel, nemo perspiciatis possimus architecto ipsum. Eum eos adipisci laboriosam reprehenderit tempora, iusto illum at ut possimus quidem animi distinctio architecto beatae qui temporibus voluptates. Quia totam dolorem nihil laboriosam velit consequuntur incidunt vel ducimus ea.',
+        status: '',
+        declineMessage: '',
+        class: '',
+        field: []
     }
 ];

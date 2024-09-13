@@ -3,7 +3,9 @@
 	import Navbar4 from '$lib/components/Navbar4.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { companies } from '$lib/company';
+
+	export let data;
+	const companies = data.companies;
 
 	let searchQuery = '';
 	let filteredCompanies = companies;
@@ -13,7 +15,9 @@
 			filteredCompanies = companies;
 		} else {
 			filteredCompanies = companies.filter((company) =>
-				`${company.name}`.toLowerCase().includes(searchQuery.toLowerCase())
+				`${company.username} ${company.perusahaan_id} ${company.usercount} ${company.transactioncount}`
+					.toLowerCase()
+					.includes(searchQuery.toLowerCase())
 			);
 		}
 	}
@@ -40,7 +44,7 @@
 			placeholder="Search Company"
 			bind:value={searchQuery}
 			on:input={handleSearch}
-			class="flex-grow border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+			class="flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 		/>
 	</div>
 
@@ -69,18 +73,19 @@
 						<td class="py-2 px-4 flex">
 							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
 							<button
-								on:click={() => handleEdit(company.id)}
+								on:click={() => handleEdit(company.perusahaan_id)}
 								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
 							>
-								{company.name}
+								{company.nama}
 							</button>
 						</td>
-						<td class="py-2 px-4">{company.companyId}</td>
-						<td class="py-2 px-4">{company.userCount}</td>
+						<td class="py-2 px-4">{company.perusahaan_id}</td>
+						<td class="py-2 px-4">{company.usercount}</td>
 						<td class="py-2 px-4"
 							><button
-								on:click={() => handleTotalTransactionClick(company.id)}
-								class="cursor-pointer focus:outline-none font-semibold">{company.totalTransaction}</button
+								on:click={() => handleTotalTransactionClick(company.perusahaan_id)}
+								class="cursor-pointer focus:outline-none font-semibold"
+								>{company.transactioncount}</button
 							></td
 						>
 					</tr>

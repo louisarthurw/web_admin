@@ -3,17 +3,19 @@
 	import Navbar3 from '$lib/components/Navbar3.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { assets } from '$lib/asset';
+
+	export let data;
+	const surveyRequests = data.surveyRequests;
 
 	let searchQuery = '';
-	let filteredAssets = assets;
+	let filteredSurveyRequests = surveyRequests;
 
 	function handleSearch() {
 		if (searchQuery.trim() === '') {
-			filteredAssets = assets;
+			filteredSurveyRequests = surveyRequests;
 		} else {
-			filteredAssets = assets.filter((asset) =>
-				`${asset.name}`.toLowerCase().includes(searchQuery.toLowerCase())
+			filteredSurveyRequests = surveyRequests.filter((surveyReq) =>
+				`${surveyReq.name}`.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 		}
 	}
@@ -24,11 +26,6 @@
 
 	function handleAssetClick(id) {
 		goto(`/aset/verif/detail/${id}`);
-	}
-
-	function toggleVerification(id) {
-		const asset = assets.find((asset) => asset.id === id);
-		asset.verification = asset.verification === 'ok' ? '-' : 'ok';
 	}
 </script>
 
@@ -57,47 +54,51 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredAssets as asset, i}
-					{#if asset.verification !== 'skip'}
-						<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
-							<td class="py-2 px-4">
-								<div class="w-8 h-8 mx-auto rounded-full flex items-center justify-center">
-									{#if asset.status === 'green'}
-										<div class="w-1/2 h-1/2 rounded-full bg-[#00FF38]"></div>
-									{:else if asset.status === 'yellow'}
-										<div class="w-1/2 h-1/2 rounded-full bg-[#FFF500]"></div>
-									{/if}
-								</div>
-							</td>
-							<td class="py-2 px-4 font-semibold text-[#18294E]">
-								<button
-									on:click={() => handleAssetClick(asset.id)}
-									class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
-								>
-									{asset.name}
-								</button>
-							</td>
-							<td class="py-2 px-4">{asset.location}</td>
-							<td class="py-2 px-4">{asset.surveyor}</td>
-							<td class="py-2 px-4">
-								{#if asset.verification}
-									<input
-										type="checkbox"
-										checked={asset.verification === 'ok'}
-										on:change={() => toggleVerification(asset.id)}
-										class="w-5 h-5 rounded-sm bg-transparent appearance-none border-[#00FF38] checked:bg-[#00FF38] focus:outline-none focus:ring-0 focus:ring-offset-0"
-									/>
-								{:else if !asset.verification}
-									<button
-										on:click={() => reassign(asset.id)}
-										class="px-2 py-1 text-sm font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
-									>
-										RE-ASSIGN
-									</button>
+				{#each filteredSurveyRequests as surveyRequest, i}
+					<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
+						<td class="py-2 px-4">
+							<div class="w-8 h-8 mx-auto rounded-full flex items-center justify-center">
+								{#if surveyRequest.data_lengkap === 'Y'}
+									<div class="w-1/2 h-1/2 rounded-full bg-[#00FF38]"></div>
+								{:else if surveyRequest.data_lengkap === 'N'}
+									<div class="w-1/2 h-1/2 rounded-full bg-[#FFF500]"></div>
 								{/if}
-							</td>
-						</tr>
-					{/if}
+							</div>
+						</td>
+						<td class="py-2 px-4 font-semibold text-[#18294E]">
+							<button
+								on:click={() => handleAssetClick(surveyRequest.id_transaksi_jual_sewa)}
+								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
+							>
+								{surveyRequest.nama_asset}
+							</button>
+						</td>
+						<td class="py-2 px-4">{surveyRequest.alamat}</td>
+						<td class="py-2 px-4">{surveyRequest.nama_lengkap}</td>
+						<td class="py-2 px-4">
+							{#if surveyRequest.status_verifikasi === 'V'}
+								<input
+									type="checkbox"
+									checked
+									disabled
+									class="w-5 h-5 rounded-sm bg-transparent appearance-none border-[#00FF38] checked:bg-[#00FF38] focus:outline-none focus:ring-0 focus:ring-offset-0"
+								/>
+							{:else if surveyRequest.status_verifikasi === 'N'}
+								<input
+									type="checkbox"
+									disabled
+									class="w-5 h-5 rounded-sm bg-transparent appearance-none border-[#00FF38] checked:bg-[#00FF38] focus:outline-none focus:ring-0 focus:ring-offset-0"
+								/>
+							{:else if surveyRequest.status_verifikasi === 'R'}
+								<button
+									on:click={() => reassign(surveyRequest.id_transaksi_jual_sewa)}
+									class="px-2 py-1 text-sm font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
+								>
+									RE-ASSIGN
+								</button>
+							{/if}
+						</td>
+					</tr>
 				{/each}
 			</tbody>
 		</table>

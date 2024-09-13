@@ -2,8 +2,11 @@
 	// @ts-nocheck
 	import Navbar2 from '$lib/components/Navbar2.svelte';
 	import { page } from '$app/stores';
-	import { surveyors } from '$lib/surveyors.js';
 	import { goto } from '$app/navigation';
+	
+	export let data;
+	const surveyors = data.surveyors
+	
 
 	let searchQuery = '';
 	let filteredSurveyors = surveyors;
@@ -13,7 +16,7 @@
 			filteredSurveyors = surveyors;
 		} else {
 			filteredSurveyors = surveyors.filter((surveyor) =>
-				`${surveyor.name}`.toLowerCase().includes(searchQuery.toLowerCase())
+				`${surveyor.nama_lengkap} ${surveyor.surveyor_id} ${surveyor.surveyonprogress} ${surveyor.totalsurvey}`.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 		}
 	}
@@ -57,15 +60,15 @@
 						<td class="py-2 px-4 flex">
 							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
 							<button 
-								on:click={() => handleEdit(surveyor.id)} 
+								on:click={() => handleEdit(surveyor.user_id)} 
 								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"
 							>
-								{surveyor.name}
+								{surveyor.nama_lengkap}
 							</button>
 						</td>
-						<td class="py-2 px-4">{surveyor.workerId}</td>
-						<td class="py-2 px-4">{surveyor.surveyOnProgress}</td>
-						<td class="py-2 px-4">{surveyor.totalSurvey}</td>
+						<td class="py-2 px-4">{surveyor.surveyor_id}</td>
+						<td class="py-2 px-4">{surveyor.surveyonprogress}</td>
+						<td class="py-2 px-4">{surveyor.totalsurvey}</td>
 					</tr>
 				{/each}
 			</tbody>

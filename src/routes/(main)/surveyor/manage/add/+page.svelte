@@ -1,81 +1,92 @@
 <script>
 	// @ts-nocheck
-    import Navbar2 from '$lib/components/Navbar2.svelte';
+	import Navbar2 from '$lib/components/Navbar2.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { surveyors } from '$lib/surveyors';
+	import { enhance } from '$app/forms';
+	import Swal from 'sweetalert2';
 
-	let name = '';
-	let workerId = '';
-	let email = '';
-	let phoneNumber = '';
-	let username = '';
-	let password = '';
+	let isShowPassword = false;
 
-	const handleCancel = () => {
-		goto('/surveyor/manage');
+	const showPassword = () => {
+		isShowPassword = true;
 	};
 
-	const handleAdd = () => {
-		const newSurveyor = {
-			id: surveyors.length + 1,
-			name,
-			workerId,
-			surveyOnProgress: 0,
-			totalSurvey: 0,
-            email,
-            phoneNumber,
-            username,
-            password
-		};
-		surveyors.push(newSurveyor);
+	const hidePassword = () => {
+		isShowPassword = false;
+	};
+
+	const handleCancel = () => {
 		goto('/surveyor/manage');
 	};
 </script>
 
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
 
-<div class="flex flex-col bg-gray-100 p-8 w-full space-y-6" style="min-height: calc(100vh - 117.6px);">
+<div
+	class="flex flex-col bg-gray-100 p-8 w-full space-y-6"
+	style="min-height: calc(100vh - 117.6px);"
+>
 	<h1 class="text-3xl font-bold text-[#18294E]">Input Data New Surveyor</h1>
-	<form class="space-y-4" on:submit|preventDefault={handleAdd}>
+	<form
+		class="space-y-4"
+		action="?/addSurveyor"
+		method="post"
+		use:enhance={() => {
+			return async ({ result, update }) => {
+				await update({ reset: false });
+
+				if (result.status === 200) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Berhasil add surveyor!',
+						text: result.data.message
+					}).then(() => {
+						goto('/surveyor/manage');
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Gagal add surveyor!',
+						text: result.data.message
+					});
+				}
+			};
+		}}
+	>
 		<input
-			bind:value={name}
 			type="text"
+			name="nama_lengkap"
 			placeholder="Name"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
 		<input
-			bind:value={workerId}
-			type="text"
-			placeholder="Worker ID"
-			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
-			required
-		/>
-		<input
-			bind:value={email}
 			type="email"
+			name="email"
 			placeholder="Email"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
 		<input
-			bind:value={phoneNumber}
 			type="tel"
+			name="no_telp"
 			placeholder="Phone Number"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
 		<input
-			bind:value={username}
 			type="text"
+			name="username"
 			placeholder="Username"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required
 		/>
 		<input
-			bind:value={password}
-			type="password"
+			type={isShowPassword ? 'text' : 'password'}
+			on:focus={showPassword}
+			on:blur={hidePassword}
+			name="password"
 			placeholder="Password"
 			class="w-full px-6 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			required

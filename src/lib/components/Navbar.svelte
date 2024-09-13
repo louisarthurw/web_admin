@@ -31,7 +31,7 @@
 	</div>
 
 	<div class="flex items-center md:order-2">
-		<Avatar id="avatar-menu" src={foto_profil} />
+		<Avatar id="avatar-menu" src={foto_profil} class="border-2 border-gray-300 rounded-full"/>
 		<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
 	</div>
 	<Dropdown placement="bottom" triggeredBy="#avatar-menu">
@@ -39,8 +39,8 @@
 			<span class="block text-sm text-[#18294E]">{nama_lengkap}</span>
 			<span class="block truncate text-sm text-[#18294E] font-medium">{email}</span>
 		</DropdownHeader>
-		<DropdownItem>Profile</DropdownItem>
-		<DropdownItem>Settings</DropdownItem>
+		<DropdownItem href="/profile">Profile</DropdownItem>
+		<DropdownItem href="/settings">Settings</DropdownItem>
 		<DropdownItem on:click={logout}>Log Out</DropdownItem>
 	</Dropdown>
 	<NavUl>
