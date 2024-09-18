@@ -3,6 +3,10 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { server } from '$lib/store';
+	import { get } from 'svelte/store';
+
+	const serverDetails = get(server);
 
 	let userInfo = {
 		nama_lengkap: 'ADMIN',
@@ -34,7 +38,7 @@
 {#if isDataFetched}
 	<Navbar
 		nama_lengkap={userInfo.nama_lengkap}
-		foto_profil={userInfo.foto_profil}
+		foto_profil={userInfo.foto_profil === '' ? '/default_profile_icon.png' : `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${userInfo.foto_profil}`}
 		email={userInfo.email}
 		currentPage={$page.url.pathname}
 	></Navbar>

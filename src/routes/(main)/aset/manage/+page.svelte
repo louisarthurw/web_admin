@@ -9,7 +9,7 @@
 	import Swal from 'sweetalert2';
 
 	export let data;
-	const assets = data.assets;
+	let assets = data.assets;
 	const allProvinces = data.allProvinces;
 	const tagsUsed = data.tagsUsed;
 	const provinsiUsed = data.provinsiUsed;
@@ -262,6 +262,8 @@
 				use:enhance={() => {
 					return async ({ result, update }) => {
 						await update({ reset: false });
+						assets = [...result.data.data];
+						console.log(assets);
 
 						if (result.status === 200) {
 							Swal.fire({
@@ -303,7 +305,7 @@
 											selectedType = selectedType.filter((t) => t !== type.value);
 										}
 										selectedTypeString = selectedType.join(',');
-										console.log('type: ', selectedType);
+										// console.log('type: ', selectedType);
 									}}
 								/>
 								<input type="hidden" name="type" value={selectedTypeString} />
@@ -329,7 +331,7 @@
 											selectedStatus = selectedStatus.filter((s) => s !== status.value);
 										}
 										selectedStatusString = selectedStatus.join(',');
-										console.log('status: ', selectedStatus);
+										// console.log('status: ', selectedStatus);
 									}}
 								/>
 								<input type="hidden" name="status" value={selectedStatusString} />
@@ -356,7 +358,7 @@
 											selectedTag = selectedTag.filter((t) => t !== tag.id);
 											selectedTag = selectedTag.sort((a, b) => a - b);
 										}
-										console.log('tag: ', selectedTag);
+										// console.log('tag: ', selectedTag);
 									}}
 								/>
 								<span class="ml-2">{tag.nama}</span>
@@ -383,7 +385,7 @@
 											selectedProvince = selectedProvince.filter((p) => p !== province.id);
 											selectedProvince = selectedProvince.sort((a, b) => a - b);
 										}
-										console.log('province: ', selectedProvince);
+										// console.log('province: ', selectedProvince);
 									}}
 								/>
 								<span class="ml-2">{province.nama}</span>

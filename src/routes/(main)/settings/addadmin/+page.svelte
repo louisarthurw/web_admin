@@ -3,26 +3,25 @@
 	import Navbar6 from '$lib/components/Navbar6.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { admins } from '$lib/admin';
-	import { roleAdmins } from '$lib/roleAdmin';
+	import { enhance } from '$app/forms';
+	import Swal from 'sweetalert2';
 
-	let name = '';
-	let username = '';
-	let role = '';
+	export let data;
+	const roles = data.roles;
+	let selectedRole = '';
 
 	const handleCancel = () => {
 		goto('/settings');
 	};
 
-	const handleAdd = () => {
-		const newAdmin = {
-			id: admins.length + 1,
-			name,
-			username,
-			role
-		};
-		admins.push(newAdmin);
-		goto('/settings');
+	let isShowPassword = false;
+
+	const showPassword = () => {
+		isShowPassword = true;
+	};
+
+	const hidePassword = () => {
+		isShowPassword = false;
 	};
 </script>
 
@@ -33,11 +32,37 @@
 
 	<div class="flex flex-col flex-grow bg-gray-100 p-6 space-y-4">
 		<h1 class="text-3xl font-bold text-[#18294E]">Add Admin</h1>
-		<form class="flex flex-grow flex-col space-y-4" on:submit|preventDefault={handleAdd}>
+		<form
+			class="flex flex-grow flex-col space-y-4"
+			action="?/addAdmin"
+			enctype="multipart/form-data"
+			method="post"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					await update({ reset: false });
+
+					if (result.status === 200) {
+						Swal.fire({
+							icon: 'success',
+							title: 'Berhasil Add Admin!',
+							text: result.data.message
+						}).then(() => {
+							goto('/settings');
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Gagal Add Admin!',
+							text: result.data.message
+						});
+					}
+				};
+			}}
+		>
 			<div>
-				<h2 class="text-lg font-semibold mb-2">Name</h2>
+				<h2 class="text-lg font-semibold mb-1">Name</h2>
 				<input
-					bind:value={name}
+					name="nama"
 					type="text"
 					placeholder="Name"
 					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
@@ -45,10 +70,9 @@
 				/>
 			</div>
 			<div>
-				<h2 class="text-lg font-semibold mb-2">Username</h2>
-
+				<h2 class="text-lg font-semibold mb-1">Username</h2>
 				<input
-					bind:value={username}
+					name="username"
 					type="text"
 					placeholder="Username"
 					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
@@ -56,18 +80,60 @@
 				/>
 			</div>
 			<div>
-				<h2 class="text-lg font-semibold mb-2">Role</h2>
+				<h2 class="text-lg font-semibold mb-1">Password</h2>
+				<input
+					name="password"
+					type={isShowPassword ? 'text' : 'password'}
+					on:focus={showPassword}
+					on:blur={hidePassword}
+					placeholder="Password"
+					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+					required
+				/>
+			</div>
+			<div>
+				<h2 class="text-lg font-semibold mb-1">Email</h2>
+				<input
+					name="email"
+					type="email"
+					placeholder="Email"
+					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+					required
+				/>
+			</div>
+			<div>
+				<h2 class="text-lg font-semibold mb-1">Phone Number</h2>
+				<input
+					name="no_telp"
+					type="tel"
+					placeholder="Phone Number"
+					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+					required
+				/>
+			</div>
+			<div>
+				<h2 class="text-lg font-semibold mb-1">Profile Picture</h2>
+				<input
+					name="foto_profil"
+					type="file"
+					class="w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+					required
+				/>
+			</div>
+			<div>
+				<h2 class="text-lg font-semibold mb-1">Role</h2>
 				<select
-					bind:value={role}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] {role ===
+					name="role"
+					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] {selectedRole ===
 					''
 						? 'text-gray-500'
-						: 'text-black'}"
+						: 'text-black font-semibold'}"
+					bind:value={selectedRole}
 					required
 				>
-					<option value="" disabled>Choose Role</option>
-					{#each roleAdmins as role}
-						<option value={role.name}>{role.name}</option>
+					<option value="" class="text-gray-500" disabled selected>Choose Role</option>
+					{#each roles as role}
+						<option value={role.role_id} class="text-black font-semibold">{role.nama_role}</option>
 					{/each}
 				</select>
 			</div>

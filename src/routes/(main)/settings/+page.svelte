@@ -3,9 +3,11 @@
 	import Navbar6 from '$lib/components/Navbar6.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { admins } from '$lib/admin';
-	import { roleAdmins } from '$lib/roleAdmin';
-	import { classes } from '$lib/class';
+
+	export let data;
+	const admins = data.admins;
+	const roles = data.roles;
+	const classes = data.businessClass;
 </script>
 
 <div class="flex" style="min-height: calc(100vh - 68.8px);">
@@ -35,7 +37,7 @@
 
 							<div class="flex-grow">
 								<div class="flex justify-between items-center">
-									<p class="font-semibold text-lg">{admin.name}</p>
+									<p class="font-semibold text-lg">{admin.nama_lengkap}</p>
 									<div class="flex space-x-2">
 										<button class="border border-white py-1 px-3 rounded-md font-medium"
 											>Delete</button
@@ -47,7 +49,7 @@
 									</div>
 								</div>
 								<input
-									bind:value={admin.role}
+									bind:value={admin.user_role}
 									type="text"
 									class="text-[#18294E] bg-white py-1 px-2 rounded-md mt-1 font-medium"
 									disabled
@@ -70,29 +72,31 @@
 				</div>
 			</div>
 			<div class="grid grid-cols-2 gap-4 mt-4">
-				{#each roleAdmins as role}
+				{#each roles as role}
 					<div class="bg-[#18294E] text-white p-4 rounded-md">
 						<div class="flex justify-between items-center">
-							<p class="font-semibold text-lg">{role.name}</p>
+							<p class="font-semibold text-lg">{role.nama_role}</p>
 							<div class="flex space-x-2">
 								<button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button>
 								<button
 									class="border border-white py-1 px-3 rounded-md font-medium"
-									on:click={() => goto(`/settings/editrole/${role.id}`)}>Edit</button
+									on:click={() => goto(`/settings/editrole/${role.role_id}`)}>Edit</button
 								>
 							</div>
 						</div>
-						{#each role.privilege as privilege}
-							<div class="flex items-center">
-								<input
-									type="checkbox"
-									class="h-4 w-4 rounded text-blue-500 mr-2"
-									checked
-									disabled
-								/>
-								<p class="text-white font-medium">{privilege}</p>
-							</div>
-						{/each}
+						{#if role.privilege}
+							{#each role.privilege as privilege}
+								<div class="flex items-center">
+									<input
+										type="checkbox"
+										class="h-4 w-4 rounded text-blue-500 mr-2"
+										checked
+										disabled
+									/>
+									<p class="text-white font-medium">{privilege}</p>
+								</div>
+							{/each}
+						{/if}
 					</div>
 				{/each}
 			</div>
@@ -112,7 +116,7 @@
 				{#each classes as businessClass}
 					<div class="bg-[#18294E] text-white p-4 rounded-md">
 						<div class="flex justify-between items-center">
-							<p class="font-semibold text-lg">{businessClass.name}</p>
+							<p class="font-semibold text-lg">{businessClass.nama}</p>
 							<div class="flex space-x-2">
 								<button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button>
 								<button
@@ -125,14 +129,14 @@
 						<div class="flex space-x-2 space-y-2 items-center">
 							<p class="text-white font-medium">Rp</p>
 							<input
-								value={businessClass.lowerRange.toLocaleString('id-ID')}
+								value={businessClass.modal_minimal.toLocaleString('id-ID')}
 								type="text"
 								class="text-[#18294E] bg-white py-1 px-2 rounded-md font-medium"
 								disabled
 							/>
 							<p class="text-white font-medium">- Rp</p>
 							<input
-								value={businessClass.upperRange.toLocaleString('id-ID')}
+								value={businessClass.modal_maksimal.toLocaleString('id-ID')}
 								type="text"
 								class="text-[#18294E] bg-white py-1 px-2 rounded-md font-medium"
 								disabled

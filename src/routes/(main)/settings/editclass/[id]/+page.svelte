@@ -3,36 +3,17 @@
 	import Navbar6 from '$lib/components/Navbar6.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { classes } from '$lib/class';
-
-	let name = '';
-	let lowerRange = '';
-	let upperRange = '';
+	import { enhance } from '$app/forms';
+	import Swal from 'sweetalert2';
 
 	let classId = $page.params.id;
-	let businessClass = classes.find((c) => c.id == classId);
 
-	if (businessClass) {
-		name = businessClass.name;
-		lowerRange = businessClass.lowerRange;
-		upperRange = businessClass.upperRange;
-	}
+	export let data;
+	const classes = data.businessClass;
+	const businessClass = classes.find((c) => c.id === parseInt(classId));
 
 	const handleCancel = () => {
 		goto('/settings');
-	};
-
-	const handleSave = () => {
-		if (businessClass) {
-			if (Number(upperRange) <= Number(lowerRange)) {
-				alert('Upper Range must be greater than Lower Range.');
-				return;
-			}
-			businessClass.name = name;
-			businessClass.lowerRange = lowerRange;
-			businessClass.upperRange = upperRange;
-			goto('/settings');
-		}
 	};
 </script>
 
@@ -43,11 +24,37 @@
 
 	<div class="flex flex-col flex-grow bg-gray-100 p-6 space-y-4">
 		<h1 class="text-3xl font-bold text-[#18294E]">Edit Class</h1>
-		<form class="flex flex-grow flex-col space-y-4" on:submit|preventDefault={handleSave}>
+		<form
+			class="flex flex-grow flex-col space-y-4"
+			action="?/editClass"
+			method="post"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					await update({ reset: false });
+
+					if (result.status === 200) {
+						Swal.fire({
+							icon: 'success',
+							title: 'Berhasil Edit Class!',
+							text: result.data.message
+						}).then(() => {
+							goto('/settings');
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Gagal Edit Class!',
+							text: result.data.message
+						});
+					}
+				};
+			}}
+		>
 			<div>
 				<h2 class="text-lg font-semibold mb-2">Class</h2>
 				<input
-					bind:value={name}
+					name="nama"
+					value={businessClass.nama}
 					type="text"
 					placeholder="Name"
 					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
@@ -59,7 +66,8 @@
 				<div class="flex space-x-2 items-center">
 					<p class="font-medium">Rp</p>
 					<input
-						bind:value={lowerRange}
+						name="minimum"
+						value={businessClass.modal_minimal}
 						type="number"
 						placeholder="Minimum Capital"
 						class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
@@ -69,7 +77,8 @@
 					<p class="font-medium">-</p>
 					<p class=" font-medium">Rp</p>
 					<input
-						bind:value={upperRange}
+						name="maximum"
+						value={businessClass.modal_maksimal}
 						type="number"
 						placeholder="Maximum Capital"
 						class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"

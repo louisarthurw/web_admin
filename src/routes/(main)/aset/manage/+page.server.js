@@ -32,7 +32,7 @@ export const load = async ({ params }) => {
         }
     });
 
-    const resultProvinces= await responseProvinces.json();
+    const resultProvinces = await responseProvinces.json();
     const allProvinces = resultProvinces.data;
 
     const responseTagsUsed = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/tags/used`, {
@@ -45,7 +45,7 @@ export const load = async ({ params }) => {
         }
     });
 
-    const resultTagsUsed= await responseTagsUsed.json();
+    const resultTagsUsed = await responseTagsUsed.json();
     const tagsUsed = resultTagsUsed.data;
 
     const responseProvinsiUsed = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/provinsi/used`, {
@@ -58,7 +58,7 @@ export const load = async ({ params }) => {
         }
     });
 
-    const resultProvinsiUsed= await responseProvinsiUsed.json();
+    const resultProvinsiUsed = await responseProvinsiUsed.json();
     const provinsiUsed = resultProvinsiUsed.data;
 
     return {
@@ -84,23 +84,18 @@ export const actions = {
 
         console.log('payload: ', payload)
 
-        // const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/filter`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Access-Control-Allow-Origin': '*',
-        //         'Access-Control-Allow-Methods': '*',
-        //         'Access-Control-Allow-Headers': '*'
-        //     },
-        //     body: JSON.stringify(payload)
-        // });
+        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/filter`, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
 
-        // const result = await response.json();
+        const result = await response.json();
+        console.log('result: ', result)
 
-        // if (result.status === 200) {
-        //     return { message: result.message }
-        // } else {
-        //     return fail(400, { message: result.message });
-        // }
+        if (result.status === 200) {
+            return result
+        } else {
+            return fail(400, { message: result.message });
+        }
     }
 }
