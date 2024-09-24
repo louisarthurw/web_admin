@@ -51,7 +51,7 @@
 
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
 
-<div class="container mx-auto mt-4">
+<div class="container mx-auto py-4">
 	<div class="flex items-center mb-4 justify-center w-full">
 		<div class="flex items-center w-[90vw]">
 			<input

@@ -4,7 +4,6 @@
 	import Navbar4 from '$lib/components/Navbar4.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { transactions } from '$lib/transaction';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
 	import { server } from '$lib/store';

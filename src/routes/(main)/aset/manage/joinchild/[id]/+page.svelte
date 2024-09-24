@@ -3,7 +3,6 @@
 	import Navbar3 from '$lib/components/Navbar3.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { assets } from '$lib/asset';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
 
