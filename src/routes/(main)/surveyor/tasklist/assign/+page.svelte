@@ -57,6 +57,7 @@
 	<form
 		class="flex flex-col flex-grow space-y-2"
 		action="?/assignSurveyor"
+		enctype="multipart/form-data"
 		method="post"
 		use:enhance={() => {
 			return async ({ result, update }) => {
@@ -198,6 +199,19 @@
 				''
 					? 'text-gray-500'
 					: 'text-[#18294E] font-semibold'}"
+				required
+			/>
+		</div>
+
+		<div>
+			<label class="text-[#18294E] font-semibold" for="letterOfAssignment"
+				>Letter of Assignment</label
+			>
+			<input
+				id="letterOfAssignment"
+				name="letterOfAssignment"
+				type="file"
+				class="w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 				required
 			/>
 		</div>

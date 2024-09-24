@@ -8,18 +8,97 @@
 	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
+	import { onMount, onDestroy } from 'svelte';
+	import '@maptiler/sdk/dist/maptiler-sdk.css';
 
 	export let data;
-	let asset = data.asset;
-	const allAsset = data.allAsset;
-	console.log(asset);
+	let asset;
 
+	let map;
+	let mapContainer;
+	let coordinate;
+	let coordinateBoundaries;
+	let initialState;
+
+	$: if (data) {
+		asset = data.asset;
+		coordinate = asset.titik_koordinat.split(',');
+		initialState = { lng: coordinate[0], lat: coordinate[1], zoom: 18 };
+	}
+
+	const allAsset = data.allAsset;
 	const serverDetails = get(server);
 
 	// let assetId = $page.params.id;
 	// let asset = assets.find((a) => a.id == assetId);
 
 	// let activeChildAssets = asset.child.filter(child => child.status === 'active');
+
+	onMount(async () => {
+		if (mapContainer) {
+			const { Map, MapStyle, Marker, config, Popup } = await import('@maptiler/sdk');
+			config.apiKey = 'Y8hoteSrnHNMgKTo6vpx';
+
+			map = new Map({
+				container: mapContainer,
+				style: MapStyle.STREETS,
+				center: [initialState.lng, initialState.lat],
+				zoom: initialState.zoom
+			});
+
+			coordinateBoundaries = asset.batas_koordinat.split('\n');
+			const polygonCoordinates = [];
+
+			const centerMarker = new Marker({ color: '#FF0000' })
+				.setLngLat([initialState.lng, initialState.lat])
+				.addTo(map);
+
+			coordinateBoundaries.forEach((coordinate) => {
+				const [lng, lat] = coordinate.split(',').map((coord) => parseFloat(coord.trim()));
+
+				if (!isNaN(lat) && !isNaN(lng)) {
+					const marker = new Marker({ color: '#18294E' }).setLngLat([lng, lat]).addTo(map);
+					polygonCoordinates.push([lng, lat]);
+				} else {
+					console.warn(`Invalid coordinates for asset ID: ${asset.id_asset}, Name: ${asset.nama}`);
+				}
+			});
+
+			if (polygonCoordinates.length > 2) {
+				map.on('load', () => {
+					map.addSource('polygon', {
+						type: 'geojson',
+						data: {
+							type: 'Feature',
+							geometry: {
+								type: 'Polygon',
+								coordinates: [polygonCoordinates]
+							}
+						}
+					});
+
+					map.addLayer({
+						id: 'polygonLayer',
+						type: 'fill',
+						source: 'polygon',
+						layout: {},
+						paint: {
+							'fill-color': '#088',
+							'fill-opacity': 0.4
+						}
+					});
+				});
+			} else {
+				console.warn('Not enough valid boundary coordinates to create a polygon.');
+			}
+		}
+	});
+
+	onDestroy(() => {
+		if (map) {
+			map.remove();
+		}
+	});
 
 	function createChild(id) {
 		goto(`/aset/manage/createchild/${id}`);
@@ -61,6 +140,11 @@
 	function getParentAsset(id) {
 		const asset = allAsset.find((a) => a.id_asset === id);
 		return asset.nama;
+	}
+
+	function gotoChild(id) {
+		console.log(id);
+		goto(`/aset/manage/overview/${id}`);
 	}
 
 	// function getJoinedAsset(id_join) {
@@ -214,23 +298,26 @@
 		<div class="flex">
 			<span class="min-w-[190px]">Coordinate Boundaries</span>
 			<span class="ml-2 mr-4">:</span>
-			<!-- <div>
-				{#each asset.coordinateBoundaries.split('\n') as boundary}
+			<div>
+				{#each asset.batas_koordinat.split('\n') as boundary}
 					<div>{boundary}</div>
 				{/each}
-			</div> -->
-			<span>{asset.batas_koordinat}</span>
+			</div>
+			<!-- <span>{asset.batas_koordinat}</span> -->
+		</div>
+		<div class="map-wrap">
+			<div class="map" bind:this={mapContainer}></div>
 		</div>
 	</div>
 
 	<div class="p-4 text-lg text-[#18294E] font-medium">
 		{#if asset.ChildAssets}
 			<h2 class="text-[#18294E] text-2xl font-bold mb-2">Child</h2>
-			<ul class="list-disc pl-5 space-y-4">
+			<ul class="list-disc pl-5 space-y-4 mb-4">
 				{#each asset.ChildAssets as childAsset}
 					<li
 						class="p-4 bg-white rounded-lg cursor-pointer"
-						on:click={() => goto(`/aset/manage/overview/${childAsset.id_asset}`)}
+						on:click={() => gotoChild(childAsset.id_asset)}
 					>
 						<ul class="space-y-2">
 							<li class="flex">
@@ -336,7 +423,7 @@
 			</ul>
 		{/if}
 
-		<div class="flex justify-between pt-4">
+		<div class="flex justify-between">
 			<div class="w-1/3"></div>
 			<button
 				type="button"
@@ -356,3 +443,17 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.map-wrap {
+		position: relative;
+		width: 100%;
+		height: 400px;
+	}
+
+	.map {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+</style>

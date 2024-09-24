@@ -43,7 +43,7 @@
 	class="flex flex-col bg-gray-100 p-8 w-full space-y-6"
 	style="min-height: calc(100vh - 117.6px);"
 >
-	<h1 class="text-3xl font-bold text-[#18294E]">Add Meeting</h1>
+	<h1 class="text-3xl font-bold text-[#18294E]">Add Progress</h1>
 	<form
 		class="space-y-4"
 		action="?/addMeeting"

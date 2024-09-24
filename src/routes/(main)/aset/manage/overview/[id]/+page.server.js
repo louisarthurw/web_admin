@@ -11,12 +11,6 @@ export const load = async ({ params }) => {
 
     const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/detail/${id}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        }
     });
 
     const result = await response.json();
@@ -24,12 +18,6 @@ export const load = async ({ params }) => {
 
     const responseAllAsset = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        }
     });
 
     const resultAllAsset = await responseAllAsset.json();

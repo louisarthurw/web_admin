@@ -3,9 +3,13 @@
 	import Navbar4 from '$lib/components/Navbar4.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { server } from '$lib/store';
+	import { get } from 'svelte/store';
 
 	export let data;
 	const users = data.users;
+
+	const serverDetails = get(server);
 	
 	let searchQuery = '';
 	let filteredUsers = users;
@@ -36,7 +40,7 @@
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
 
 <div class="container mx-auto mt-4 w-full">
-	<div class="flex w-[90vw] mx-auto mb-4">
+	<div class="flex w-[90vw] mx-auto">
 		<input
 			type="text"
 			placeholder="Search User"
@@ -46,7 +50,7 @@
 		/>
 	</div>
 
-	<div class="flex justify-center">
+	<div class="flex justify-center py-4">
 		<table class="min-w-[90vw] bg-white text-center border border-gray-300">
 			<thead>
 				<tr>
@@ -68,7 +72,9 @@
 				{#each filteredUsers as user, i}
 					<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
 						<td class="py-2 px-4 flex">
-							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
+							<img src={user.foto_profil
+								? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${user.foto_profil}`
+								: '/default_profile_icon.png'} alt="avatar" class="w-8 h-8 rounded-full mr-2" />
 							<button
 								on:click={() => handleEdit(user.id)}
 								class="cursor-pointer focus:outline-none font-semibold text-[#18294E]"

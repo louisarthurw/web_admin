@@ -10,6 +10,8 @@
 
 	export let data;
 	let assets = data.assets;
+	console.log(assets);
+
 	const allProvinces = data.allProvinces;
 	const tagsUsed = data.tagsUsed;
 	const provinsiUsed = data.provinsiUsed;
@@ -144,7 +146,13 @@
 		// 	}
 		// 	return acc;
 		// }, []);
-
+		filteredAssets = assets;
+		selectedType = [];
+		selectedTypeString = '';
+		selectedStatus = [];
+		selectedStatusString = '';
+		selectedTag = [];
+		selectedProvince = [];
 		closeFilterPopup();
 	}
 
@@ -164,7 +172,6 @@
 
 	function setProvinsi(id) {
 		const convertedProvince = allProvinces.find((province) => province.id === id);
-
 		return convertedProvince.nama;
 	}
 
@@ -196,36 +203,38 @@
 			>
 		</div>
 
-		{#each filteredAssets as asset}
-			<button
-				class="flex w-[90vw] bg-white p-4 border rounded-lg shadow mb-4"
-				on:click={() => goToDetails(asset.id_asset)}
-			>
-				<img
-					src={asset.link_gambar
-						? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${asset.link_gambar[0]}`
-						: '/asset.jpg'}
-					alt={asset.name}
-					class="w-24 h-24 rounded-lg mr-6 object-cover"
-				/>
+		{#if filteredAssets}
+			{#each filteredAssets as asset}
+				<button
+					class="flex w-[90vw] bg-white p-4 border rounded-lg shadow mb-4"
+					on:click={() => goToDetails(asset.id_asset)}
+				>
+					<img
+						src={asset.link_gambar
+							? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${asset.link_gambar[0]}`
+							: '/asset.jpg'}
+						alt={asset.name}
+						class="w-24 h-24 rounded-lg mr-6 object-cover"
+					/>
 
-				<div class="flex flex-col text-left h-24 justify-center">
-					<p class="text-[#18294E] font-bold text-2xl">
-						{#if asset.id_asset_parent}
-							{asset.nama} [Bagian dari {getParentAsset(asset.id_asset_parent)}]
-						{:else}
-							{asset.nama}
-						{/if}
-					</p>
-					<p class="text-[#18294E] text-lg">{asset.alamat}, {setProvinsi(asset.provinsi)}</p>
-					<p class="text-[#18294E] text-lg">
-						Status: <span class="font-bold"
-							>{asset.status_asset === 'S' ? 'For Rent' : 'Rented'}</span
-						>
-					</p>
-				</div>
-			</button>
-		{/each}
+					<div class="flex flex-col text-left h-24 justify-center">
+						<p class="text-[#18294E] font-bold text-2xl">
+							{#if asset.id_asset_parent}
+								{asset.nama} [Bagian dari {getParentAsset(asset.id_asset_parent)}]
+							{:else}
+								{asset.nama}
+							{/if}
+						</p>
+						<p class="text-[#18294E] text-lg">{asset.alamat}, {setProvinsi(asset.provinsi)}</p>
+						<p class="text-[#18294E] text-lg">
+							Status: <span class="font-bold"
+								>{asset.status_asset === 'S' ? 'For Rent' : 'Rented'}</span
+							>
+						</p>
+					</div>
+				</button>
+			{/each}
+		{/if}
 
 		<!-- {#each filteredChildAssets as childAsset}
 			{#if childAsset.status === 'active'}
@@ -262,8 +271,7 @@
 				use:enhance={() => {
 					return async ({ result, update }) => {
 						await update({ reset: false });
-						assets = [...result.data.data];
-						console.log(assets);
+						filteredAssets = [...result.data.data];
 
 						if (result.status === 200) {
 							Swal.fire({
@@ -297,6 +305,7 @@
 								<input
 									type="checkbox"
 									value={type.value}
+									checked={selectedType.includes(type.value)}
 									class="form-checkbox h-4 w-4 rounded text-[#18294E] focus:ring-0 focus:outline-none"
 									on:change={(e) => {
 										if (e.target.checked) {
@@ -323,6 +332,7 @@
 								<input
 									type="checkbox"
 									value={status.value}
+									checked={selectedStatus.includes(status.value)}
 									class="form-checkbox h-4 w-4 rounded text-[#18294E] focus:ring-0 focus:outline-none"
 									on:change={(e) => {
 										if (e.target.checked) {
@@ -349,6 +359,7 @@
 								<input
 									type="checkbox"
 									value={tag.id}
+									checked={selectedTag.includes(tag.id)}
 									class="form-checkbox h-4 w-4 rounded text-[#18294E] focus:ring-0 focus:outline-none"
 									on:change={(e) => {
 										if (e.target.checked) {
@@ -376,6 +387,7 @@
 								<input
 									type="checkbox"
 									value={province.id}
+									checked={selectedProvince.includes(province.id)}
 									class="form-checkbox h-4 w-4 rounded text-[#18294E] focus:ring-0 focus:outline-none"
 									on:change={(e) => {
 										if (e.target.checked) {

@@ -34,7 +34,8 @@ export const actions = {
 
         const payload = {
             role: entries.nama,
-            privilege: entries.privilege
+            privilege: entries.privilege,
+            admin_role: 'Y'
         };
 
         if (payload.privilege === '') {

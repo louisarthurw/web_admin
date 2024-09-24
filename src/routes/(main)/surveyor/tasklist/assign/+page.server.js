@@ -40,29 +40,59 @@ export const load = async () => {
     }
 }
 
+// /** @type {import('./$types').Actions} */
+// export const actions = {
+//     assignSurveyor: async ({ request }) => {
+//         const formData = await request.formData();
+//         const entries = Object.fromEntries(formData);
+
+//         const payload = {
+//             user_id: parseInt(entries.user_id),
+//             id_asset: parseInt(entries.id_asset),
+//             dateline: entries.dateline,
+//         };
+
+//         console.log(payload)
+
+//         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/survey_req`, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Access-Control-Allow-Origin': '*',
+//                 'Access-Control-Allow-Methods': '*',
+//                 'Access-Control-Allow-Headers': '*'
+//             },
+//             body: JSON.stringify(payload)
+//         });
+
+//         const result = await response.json();
+
+//         if (result.status === 200) {
+//             return { message: result.message }
+//         } else {
+//             return fail(400, { message: result.message });
+//         }
+//     }
+// };
+
 /** @type {import('./$types').Actions} */
 export const actions = {
     assignSurveyor: async ({ request }) => {
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
-        const payload = {
-            user_id: parseInt(entries.user_id),
-            id_asset: parseInt(entries.id_asset),
-            dateline: entries.dateline,
-        };
+        const payload = new FormData();
 
-        console.log(payload)
+        payload.append('idUser',parseInt(entries.user_id));
+        payload.append('idAsset', parseInt(entries.id_asset));
+        payload.append('dateline', entries.dateline);
+        payload.append('surat', entries.letterOfAssignment);
+
+        console.log("payload: ", payload)
 
         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/survey_req`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
-            body: JSON.stringify(payload)
+            body: payload
         });
 
         const result = await response.json();

@@ -83,8 +83,8 @@
 			<tbody>
 				{#each filteredSurveyRequests as surveyRequest, i}
 					<tr class="border-t text-left {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
-						<td class="py-2 px-4">{surveyRequest.nama_asset}</td>
-						<td class="py-2 px-4">{surveyRequest.alamat}</td>
+						<td class="py-2 px-4">{surveyRequest.asset_nama}</td>
+						<td class="py-2 px-4">{surveyRequest.asset_alamat}</td>
 						<td class="py-2 px-4 flex items-center">
 							<img src="/default_profile_icon.png" alt="avatar" class="w-8 h-8 rounded-full mr-2" />
 							<p class="text-[#18294E]">

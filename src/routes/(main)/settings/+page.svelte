@@ -39,9 +39,9 @@
 								<div class="flex justify-between items-center">
 									<p class="font-semibold text-lg">{admin.nama_lengkap}</p>
 									<div class="flex space-x-2">
-										<button class="border border-white py-1 px-3 rounded-md font-medium"
+										<!-- <button class="border border-white py-1 px-3 rounded-md font-medium"
 											>Delete</button
-										>
+										> -->
 										<button
 											class="border border-white py-1 px-3 rounded-md font-medium"
 											on:click={() => goto(`/settings/editadmin/${admin.id}`)}>Edit</button
@@ -77,7 +77,7 @@
 						<div class="flex justify-between items-center">
 							<p class="font-semibold text-lg">{role.nama_role}</p>
 							<div class="flex space-x-2">
-								<button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button>
+								<!-- <button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button> -->
 								<button
 									class="border border-white py-1 px-3 rounded-md font-medium"
 									on:click={() => goto(`/settings/editrole/${role.role_id}`)}>Edit</button
@@ -118,7 +118,7 @@
 						<div class="flex justify-between items-center">
 							<p class="font-semibold text-lg">{businessClass.nama}</p>
 							<div class="flex space-x-2">
-								<button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button>
+								<!-- <button class="border border-white py-1 px-3 rounded-md font-medium">Delete</button> -->
 								<button
 									class="border border-white py-1 px-3 rounded-md font-medium"
 									on:click={() => goto(`/settings/editclass/${businessClass.id}`)}>Edit</button

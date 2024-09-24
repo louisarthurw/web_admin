@@ -20,7 +20,17 @@ export const load = async () => {
     const resultAdmin = await responseAdmin.json();
     const admins = resultAdmin.data;
 
-    const responseRole = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/privrole`, {
+    // const responseRole = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/privrole`, {
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Access-Control-Allow-Origin': '*',
+    //         'Access-Control-Allow-Methods': '*',
+    //         'Access-Control-Allow-Headers': '*'
+    //     }
+    // });
+
+    const responseRole = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/admin/role`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

@@ -33,6 +33,22 @@
 		const [hours, minutes] = timeString.split(':');
 		return `${hours}:${minutes}`;
 	}
+
+	
+	function getFileType(type) {
+		switch (type) {
+			case 'L':
+				return 'LOI';
+			case 'C':
+				return 'Contract';
+			case 'A':
+				return 'Addendum';
+			case '':
+				return '';
+			default:
+				return 'Unknown';
+		}
+	}
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
@@ -117,7 +133,7 @@
 												</p>
 												<p class="flex">
 													<span class="font-bold mr-2">:</span>
-													<span>{prog.tipe}</span>
+													<span>{getFileType(prog.tipe)}</span>
 												</p>
 											</div>
 										</div>
@@ -134,7 +150,7 @@
 								on:click={() => handleAddMeeting(progress.user_id, progress.id_asset)}
 								class="bg-[#18294E] text-white font-bold py-3 px-6 rounded-md"
 							>
-								Add Meeting
+								Add Progress
 							</button>
 						</div>
 					{/if}

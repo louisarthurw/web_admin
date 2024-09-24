@@ -6,9 +6,84 @@
 	import { assets } from '$lib/asset';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
+	import { onMount, onDestroy } from 'svelte';
+	import '@maptiler/sdk/dist/maptiler-sdk.css';
 
 	export let data;
 	const surveyData = data.surveyData;
+
+	let map;
+	let mapContainer;
+	let coordinate = surveyData.titik_koordinat_new.split(',');
+	let coordinateBoundaries;
+	const initialState = { lng: coordinate[0], lat: coordinate[1], zoom: 18 };
+
+	onMount(async () => {
+		if (mapContainer) {
+			const { Map, MapStyle, Marker, config, Popup } = await import('@maptiler/sdk');
+			config.apiKey = 'Y8hoteSrnHNMgKTo6vpx';
+
+			map = new Map({
+				container: mapContainer,
+				style: MapStyle.STREETS,
+				center: [initialState.lng, initialState.lat],
+				zoom: initialState.zoom
+			});
+
+			coordinateBoundaries = surveyData.batas_koordinat_new.split('\n');
+			const polygonCoordinates = [];
+			console.log(coordinateBoundaries);
+
+			const centerMarker = new Marker({ color: '#FF0000' })
+				.setLngLat([initialState.lng, initialState.lat])
+				.addTo(map);
+
+			coordinateBoundaries.forEach((coordinate) => {
+				const [lng, lat] = coordinate.split(',').map((coord) => parseFloat(coord.trim()));
+
+				if (!isNaN(lat) && !isNaN(lng)) {
+					const marker = new Marker({ color: '#18294E' }).setLngLat([lng, lat]).addTo(map);
+					polygonCoordinates.push([lng, lat]);
+				} else {
+					console.warn(`Invalid coordinates for asset ID: ${asset.id_asset}, Name: ${asset.nama}`);
+				}
+			});
+
+			if (polygonCoordinates.length > 2) {
+				map.on('load', () => {
+					map.addSource('polygon', {
+						type: 'geojson',
+						data: {
+							type: 'Feature',
+							geometry: {
+								type: 'Polygon',
+								coordinates: [polygonCoordinates]
+							}
+						}
+					});
+
+					map.addLayer({
+						id: 'polygonLayer',
+						type: 'fill',
+						source: 'polygon',
+						layout: {},
+						paint: {
+							'fill-color': '#088',
+							'fill-opacity': 0.4
+						}
+					});
+				});
+			} else {
+				console.warn('Not enough valid boundary coordinates to create a polygon.');
+			}
+		}
+	});
+
+	onDestroy(() => {
+		if (map) {
+			map.remove();
+		}
+	});
 
 	function back() {
 		goto(`/aset/verif`);
@@ -16,6 +91,27 @@
 
 	function reassign() {
 		goto(`/surveyor/assign`);
+	}
+
+	function getAssetType(type) {
+		switch (type) {
+			case 'B':
+				return 'Building';
+			case 'L':
+				return 'Land';
+			case 'A':
+				return 'Apart';
+			default:
+				return 'Unknown';
+		}
+	}
+
+	function getUsages(arrayUsage) {
+		return arrayUsage.map((item) => item.nama).join(', ');
+	}
+
+	function getTags(arrayTag) {
+		return arrayTag.map((item) => item.nama).join(', ');
 	}
 </script>
 
@@ -89,9 +185,31 @@
 			<label class="text-[#18294E] font-semibold" for="type">Type</label>
 			<input
 				id="type"
-				value={surveyData.tipe_asset}
+				value={getAssetType(surveyData.tipe_asset)}
 				type="text"
 				placeholder="Type"
+				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
+				disabled
+			/>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="uasge">Usage</label>
+			<input
+				id="usage"
+				value={getUsages(surveyData.usage_new)}
+				type="text"
+				placeholder="usage"
+				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
+				disabled
+			/>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="tags">Tags</label>
+			<input
+				id="tags"
+				value={getTags(surveyData.tags_new)}
+				type="text"
+				placeholder="tags"
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 				disabled
 			/>
@@ -144,6 +262,9 @@
 				disabled
 			/>
 		</div>
+		<div class="map-wrap">
+			<div class="map" bind:this={mapContainer}></div>
+		</div>
 		<div class="flex justify-between pt-8">
 			{#if surveyData.status_verifikasi === 'N'}
 				<div class="w-1/3"></div>
@@ -191,3 +312,17 @@
 		</div>
 	</form>
 </div>
+
+<style>
+	.map-wrap {
+		position: relative;
+		width: 100%;
+		height: 400px;
+	}
+
+	.map {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+</style>
