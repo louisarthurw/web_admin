@@ -9,7 +9,7 @@
 	let mapContainer;
 
 	const serverDetails = get(server);
-	const initialState = { lng: 116.0012, lat: -2.149, zoom: 4.5 };
+	const initialState = { lat: -2.149, lng: 116.0012, zoom: 4.5 };
 
 	onMount(async () => {
 		if (mapContainer) {
@@ -24,20 +24,23 @@
 			});
 
 			try {
-				const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset`, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Access-Control-Allow-Origin': '*',
-						'Access-Control-Allow-Methods': '*',
-						'Access-Control-Allow-Headers': '*'
+				const response = await fetch(
+					`http://${serverDetails.hostname}:${serverDetails.port}/asset`,
+					{
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Access-Control-Allow-Origin': '*',
+							'Access-Control-Allow-Methods': '*',
+							'Access-Control-Allow-Headers': '*'
+						}
 					}
-				});
+				);
 
 				const data = await response.json();
 				data.data.forEach((asset) => {
 					if (asset.titik_koordinat) {
-						const [lng, lat] = asset.titik_koordinat
+						const [lat, lng] = asset.titik_koordinat
 							.split(',')
 							.map((coord) => parseFloat(coord.trim()));
 

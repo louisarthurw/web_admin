@@ -77,6 +77,9 @@ export const actions = {
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
+        const gambar_lama = entries.gambar_lama.split(",");
+        console.log(gambar_lama)
+        const gambar_new = formData.getAll('gambar_baru');
 
         const payload = new FormData();
 
@@ -118,7 +121,31 @@ export const actions = {
             payload.append('surat_kuasa', entries.surat_kuasa);
         }
 
-        // payload.append('gambar_asset', entries.image);
+        if (gambar_lama.length > 0 && gambar_lama[0] !== '') {
+            for (const gambar of gambar_lama) {
+                try {
+                    const responseGambar = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`, {
+                        method: 'GET',
+                    });
+
+                    if (responseGambar.ok) {
+                        const gambarr = await responseGambar.blob();
+                        payload.append('GambarFile', gambarr, (gambar.split('/').pop()).split('_').pop());
+                    } else {
+                        console.error('Error fetching image');
+                    }
+                } catch (error) {
+                    console.error('Error occurred while fetching image:', error);
+                }
+            }
+        }
+
+        if (gambar_new.length > 0) {
+            gambar_new.forEach((gambar) => {
+                payload.append('GambarFile', gambar);
+            });
+        }
+
         payload.append('status', String(entries.status));
         payload.append('alamat', String(entries.alamat));
         payload.append('provinsi', String(entries.provinsi));
@@ -131,13 +158,16 @@ export const actions = {
         if (payload.get('usage') === '') {
             return fail(400, { message: 'Pilih setidaknya 1 usage!' });
         }
-        if (payload.get('tag') === '') {
+        if (payload.get('tags') === '') {
             return fail(400, { message: 'Pilih setidaknya 1 tag!' });
+        }
+        if (!payload.get('GambarFile')) {
+            return fail(400, { message: 'Harus ada setidaknya 1 image!' });
         }
 
         console.log("payload: ", payload)
 
-        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/nogambar`, {
+        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset`, {
             method: 'PUT',
             body: payload
         });

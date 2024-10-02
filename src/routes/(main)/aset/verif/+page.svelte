@@ -10,6 +10,10 @@
 	let searchQuery = '';
 	let filteredSurveyRequests = surveyRequests;
 
+	let currentPage = 1;
+	let itemsPerPage = 9;
+	let totalPages = Math.ceil(filteredSurveyRequests.length / itemsPerPage);
+
 	function handleSearch() {
 		if (searchQuery.trim() === '') {
 			filteredSurveyRequests = surveyRequests;
@@ -18,12 +22,22 @@
 				`${surveyReq.name}`.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 		}
+		currentPage = 1;
+		totalPages = Math.ceil(filteredSurveyRequests.length / itemsPerPage);
 	}
 
-	function reassign(id) {
-		goto(`/surveyor/assign`);
-	}
+	$: paginatedSurveyRequests = filteredSurveyRequests.slice(
+		(currentPage - 1) * itemsPerPage,
+		currentPage * itemsPerPage
+	);
 
+	$: startEntry = (currentPage - 1) * itemsPerPage + 1;
+	$: endEntry = Math.min(currentPage * itemsPerPage, filteredSurveyRequests.length);
+
+	function goToPage(pageNumber) {
+		currentPage = pageNumber;
+	}
+	
 	function handleAssetClick(id) {
 		goto(`/aset/verif/detail/${id}`);
 	}
@@ -31,7 +45,7 @@
 
 <Navbar3 currentPage={$page.url.pathname}></Navbar3>
 
-<div class="container mx-auto mt-4 w-full">
+<div class="container mx-auto py-4 w-full">
 	<div class="flex w-[90vw] mx-auto mb-4">
 		<input
 			type="text"
@@ -54,7 +68,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredSurveyRequests as surveyRequest, i}
+				{#each paginatedSurveyRequests as surveyRequest, i}
 					<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
 						<td class="py-2 px-4">
 							<div class="w-8 h-8 mx-auto rounded-full flex items-center justify-center">
@@ -91,10 +105,10 @@
 								/>
 							{:else if surveyRequest.status_verifikasi === 'R'}
 								<button
-									on:click={() => reassign(surveyRequest.id_transaksi_jual_sewa)}
-									class="px-2 py-1 text-sm font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
+									class="px-2 py-1 text-sm font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md"
+									disabled
 								>
-									RE-ASSIGN
+									REASSIGN
 								</button>
 							{/if}
 						</td>
@@ -102,5 +116,24 @@
 				{/each}
 			</tbody>
 		</table>
+	</div>
+
+	<div class="flex justify-between mt-2 w-[90vw] mx-auto">
+		<span class="text-[#18294E] font-medium">
+			Showing {startEntry} to {endEntry} of {filteredSurveyRequests.length} entries
+		</span>
+
+		<div class="flex space-x-1">
+			{#each Array(totalPages) as _, i}
+				<button
+					class="px-3 py-1 rounded-lg {currentPage === i + 1
+						? 'bg-[#18294E] text-white'
+						: 'bg-gray-200 text-gray-600'}"
+					on:click={() => goToPage(i + 1)}
+				>
+					{i + 1}
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>

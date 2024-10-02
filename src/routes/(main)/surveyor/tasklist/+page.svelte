@@ -4,13 +4,16 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 
-
 	export let data;
 	const surveyRequests = data.surveyRequests;
 	// console.log(surveyRequests);
 
 	let searchQuery = '';
 	let filteredSurveyRequests = surveyRequests.slice().sort(sortByStatusAndDateline);
+
+	let currentPage = 1;
+	let itemsPerPage = 9;
+	let totalPages = Math.ceil(filteredSurveyRequests.length / itemsPerPage);
 
 	function sortByStatusAndDateline(a, b) {
 		if (a.status_request === 'O' && b.status_request === 'O') {
@@ -47,6 +50,18 @@
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', options);
 	}
+
+	$: paginatedSurveyRequests = filteredSurveyRequests.slice(
+		(currentPage - 1) * itemsPerPage,
+		currentPage * itemsPerPage
+	);
+
+	$: startEntry = (currentPage - 1) * itemsPerPage + 1;
+	$: endEntry = Math.min(currentPage * itemsPerPage, filteredSurveyRequests.length);
+
+	function goToPage(pageNumber) {
+		currentPage = pageNumber;
+	}
 </script>
 
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
@@ -81,7 +96,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredSurveyRequests as surveyRequest, i}
+				{#each paginatedSurveyRequests as surveyRequest, i}
 					<tr class="border-t text-left {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
 						<td class="py-2 px-4">{surveyRequest.asset_nama}</td>
 						<td class="py-2 px-4">{surveyRequest.asset_alamat}</td>
@@ -91,7 +106,7 @@
 								{surveyRequest.nama_lengkap}
 							</p>
 						</td>
-			
+
 						{#if surveyRequest.status_request === 'O'}
 							<td class="py-2 px-4">Ongoing</td>
 							<td class="py-2 px-4">{formatDate(surveyRequest.dateline)}</td>
@@ -102,7 +117,25 @@
 					</tr>
 				{/each}
 			</tbody>
-			
 		</table>
+	</div>
+
+	<div class="flex justify-between mt-2 w-[90vw] mx-auto">
+		<span class="text-[#18294E] font-medium">
+			Showing {startEntry} to {endEntry} of {filteredSurveyRequests.length} entries
+		</span>
+
+		<div class="flex space-x-1">
+			{#each Array(totalPages) as _, i}
+				<button
+					class="px-3 py-1 rounded-lg {currentPage === i + 1
+						? 'bg-[#18294E] text-white'
+						: 'bg-gray-200 text-gray-600'}"
+					on:click={() => goToPage(i + 1)}
+				>
+					{i + 1}
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>

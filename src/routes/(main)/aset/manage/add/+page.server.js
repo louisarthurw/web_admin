@@ -73,6 +73,7 @@ export const actions = {
     addAsset: async ({ request }) => {
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
+        const files = formData.getAll('image');
 
         const payload = new FormData();
 
@@ -84,7 +85,9 @@ export const actions = {
         payload.append('nomor_legalitas', String(entries.nomor_legalitas));
         payload.append('file_legalitas', entries.file_legalitas);
         payload.append('surat_kuasa', entries.surat_kuasa);
-        payload.append('gambar_asset', entries.image);
+        files.forEach((file) => {
+            payload.append('GambarFile', file);
+        });
         payload.append('status', String(entries.status));
         payload.append('alamat', String(entries.alamat));
         payload.append('provinsi', String(entries.provinsi));
@@ -93,18 +96,17 @@ export const actions = {
         payload.append('batas_koordinat', String(entries.batas_koordinat));
         payload.append('luas', String(entries.luas));
         payload.append('nilai', String(entries.nilai));
-        // payload.append('perusahaan_id', String(entries.perusahaan_id));
 
         if (payload.get('usage') === '') {
             return fail(400, { message: 'Pilih setidaknya 1 usage!' });
         }
-        if (payload.get('tag') === '') {
+        if (payload.get('tags') === '') {
             return fail(400, { message: 'Pilih setidaknya 1 tag!' });
         }
 
         console.log("payload: ", payload)
 
-        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset`, {
+        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/gambar`, {
             method: 'POST',
             body: payload
         });

@@ -11,7 +11,6 @@
 	console.log(childAsset);
 
 	let id = $page.params.id;
-	let asset = assets.find((a) => a.id == id);
 
 	// let childAssets = asset.child.filter((child) => child.status === 'active');
 	let selectedIds;

@@ -54,16 +54,18 @@
 			{asset.nama}
 		{/if}
 	</h2>
-	<div class="flex space-x-4">
-		{#each Array(5) as _, i}
-			<img
-				src={asset.link_gambar
-					? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${asset.link_gambar[0]}`
-					: '/asset.jpg'}
-				alt="{asset.nama} image {i + 1}"
-				class="w-64 h-64 object-cover rounded-md"
-			/>
-		{/each}
+	<div class="flex space-x-4 overflow-x-auto">
+		{#if asset.link_gambar}
+			{#each asset.link_gambar as gambar, i}
+				<img
+					src={asset.link_gambar
+						? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`
+						: '/asset.jpg'}
+					alt="{asset.nama} image {i + 1}"
+					class="w-64 h-64 object-cover rounded-md"
+				/>
+			{/each}
+		{/if}
 	</div>
 </div>
 

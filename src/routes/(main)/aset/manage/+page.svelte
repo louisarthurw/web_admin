@@ -20,6 +20,7 @@
 
 	let searchQuery = '';
 	let filteredAssets = assets;
+	console.log(filteredAssets)
 	let filteredChildAssets = [];
 
 	let showFilterPopup = false;

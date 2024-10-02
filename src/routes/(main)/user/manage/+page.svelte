@@ -14,6 +14,10 @@
 	let searchQuery = '';
 	let filteredUsers = users;
 
+	let currentPage = 1;
+	let itemsPerPage = 9;
+	let totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
 	function handleSearch() {
 		if (searchQuery.trim() === '') {
 			filteredUsers = users;
@@ -22,6 +26,20 @@
 				`${user.nama} ${user.id} ${user.totalPerusahaan} ${user.totalTransaksi}`.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 		}
+		currentPage = 1;
+		totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+	}
+
+	$: paginatedUsers= filteredUsers.slice(
+		(currentPage - 1) * itemsPerPage,
+		currentPage * itemsPerPage
+	);
+
+	$: startEntry = (currentPage - 1) * itemsPerPage + 1;
+	$: endEntry = Math.min(currentPage * itemsPerPage, filteredUsers.length);
+
+	function goToPage(pageNumber) {
+		currentPage = pageNumber;
 	}
 
 	function handleEdit(id) {
@@ -39,7 +57,7 @@
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
 
-<div class="container mx-auto mt-4 w-full">
+<div class="container mx-auto py-4 w-full">
 	<div class="flex w-[90vw] mx-auto">
 		<input
 			type="text"
@@ -50,7 +68,7 @@
 		/>
 	</div>
 
-	<div class="flex justify-center py-4">
+	<div class="flex justify-center mt-4">
 		<table class="min-w-[90vw] bg-white text-center border border-gray-300">
 			<thead>
 				<tr>
@@ -69,7 +87,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredUsers as user, i}
+				{#each paginatedUsers as user, i}
 					<tr class="border-t {i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
 						<td class="py-2 px-4 flex">
 							<img src={user.foto_profil
@@ -95,5 +113,24 @@
 				{/each}
 			</tbody>
 		</table>
+	</div>
+
+	<div class="flex justify-between mt-2 w-[90vw] mx-auto">
+		<span class="text-[#18294E] font-medium">
+			Showing {startEntry} to {endEntry} of {filteredUsers.length} entries
+		</span>
+
+		<div class="flex space-x-1">
+			{#each Array(totalPages) as _, i}
+				<button
+					class="px-3 py-1 rounded-lg {currentPage === i + 1
+						? 'bg-[#18294E] text-white'
+						: 'bg-gray-200 text-gray-600'}"
+					on:click={() => goToPage(i + 1)}
+				>
+					{i + 1}
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>

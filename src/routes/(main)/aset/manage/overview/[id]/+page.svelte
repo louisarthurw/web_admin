@@ -23,7 +23,7 @@
 	$: if (data) {
 		asset = data.asset;
 		coordinate = asset.titik_koordinat.split(',');
-		initialState = { lng: coordinate[0], lat: coordinate[1], zoom: 18 };
+		initialState = { lng: coordinate[1], lat: coordinate[0], zoom: 18 };
 	}
 
 	const allAsset = data.allAsset;
@@ -54,7 +54,7 @@
 				.addTo(map);
 
 			coordinateBoundaries.forEach((coordinate) => {
-				const [lng, lat] = coordinate.split(',').map((coord) => parseFloat(coord.trim()));
+				const [lat, lng] = coordinate.split(',').map((coord) => parseFloat(coord.trim()));
 
 				if (!isNaN(lat) && !isNaN(lng)) {
 					const marker = new Marker({ color: '#18294E' }).setLngLat([lng, lat]).addTo(map);
@@ -174,16 +174,18 @@
 			{asset.nama}
 		{/if}
 	</h2>
-	<div class="flex space-x-4">
-		{#each Array(5) as _, i}
-			<img
-				src={asset.link_gambar
-					? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${asset.link_gambar[0]}`
-					: '/asset.jpg'}
-				alt="{asset.nama} image {i + 1}"
-				class="w-64 h-64 object-cover rounded-md"
-			/>
-		{/each}
+	<div class="flex space-x-4 overflow-x-auto">
+		{#if asset.link_gambar}
+			{#each asset.link_gambar as gambar, i}
+				<img
+					src={asset.link_gambar
+						? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`
+						: '/asset.jpg'}
+					alt="{asset.nama} image {i + 1}"
+					class="w-64 h-64 object-cover rounded-md"
+				/>
+			{/each}
+		{/if}
 	</div>
 </div>
 

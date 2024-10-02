@@ -25,7 +25,7 @@
 	};
 </script>
 
-<Navbar class="border-b border-gray-300 p-1 sticky left-0 top-0">
+<Navbar class="border-b border-gray-300 p-1 sticky left-0 top-0 z-10">
 	<div class="self-center whitespace-nowrap text-3xl text-[#18294E] font-bold">
 		Hello, {nama_lengkap}
 	</div>

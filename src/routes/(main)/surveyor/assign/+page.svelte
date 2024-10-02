@@ -23,7 +23,7 @@
 
 	const serverDetails = get(server);
 
-	const initialState = { lng: 116.0012, lat: -2.0149, zoom: 4.5 };
+	const initialState = { lat: -2.0149, lng: 116.0012, zoom: 4.5 };
 
 	let selectedMarker = null;
 	let radius = 0.5;
@@ -41,18 +41,18 @@
 		const distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
 		const distanceY = km / 110.574;
 
-		// for (let i = 0; i < points; i++) {
-		// 	const theta = (i / points) * (2 * Math.PI);
-		// 	const x = distanceX * Math.cos(theta);
-		// 	const y = distanceY * Math.sin(theta);
+		for (let i = 0; i < points; i++) {
+			const theta = (i / points) * (2 * Math.PI);
+			const x = distanceX * Math.cos(theta);
+			const y = distanceY * Math.sin(theta);
 
-		// 	const newLat = coords.latitude + y;
-		// 	const newLng = coords.longitude + x;
+			const newLat = coords.latitude + y;
+			const newLng = coords.longitude + x;
 
-		// 	ret.push([newLng, newLat]);
-		// }
+			ret.push([newLng, newLat]);
+		}
 
-		// ret.push(ret[0]);
+		ret.push(ret[0]);
 		console.log(ret);
 
 		return {
@@ -92,8 +92,8 @@
 					const coords = asset.titik_koordinat.split(',').map((coord) => coord.trim());
 
 					if (coords.length === 2) {
-						const lng = parseFloat(coords[0]);
-						const lat = parseFloat(coords[1]);
+						const lng = parseFloat(coords[1]);
+						const lat = parseFloat(coords[0]);
 
 						if (!isNaN(lat) && !isNaN(lng)) {
 							const popup = new Popup().setHTML(`
@@ -164,8 +164,8 @@
 									const surveyorCoords = surveyor.lokasi.split(',').map((coord) => coord.trim());
 
 									if (surveyorCoords.length === 2) {
-										const surveyorLng = parseFloat(surveyorCoords[0]);
-										const surveyorLat = parseFloat(surveyorCoords[1]);
+										const surveyorLng = parseFloat(surveyorCoords[1]);
+										const surveyorLat = parseFloat(surveyorCoords[0]);
 
 										if (!isNaN(surveyorLng) && !isNaN(surveyorLat)) {
 											const marker = new Marker({ element: el })

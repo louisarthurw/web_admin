@@ -10,7 +10,7 @@
 
 	export let data;
 	const asset = data.asset;
-    console.log(asset)
+	console.log(asset);
 	const usages = data.usage;
 	const tags = data.tags;
 	const provinces = data.provinces;
@@ -21,6 +21,7 @@
 
 	let isEditingLegalityFile = false;
 	let isEditingPowerOfAttorney = false;
+	let isAddingNewImage = false;
 
 	let selectedType = asset.tipe;
 	let selectedUsages = asset.usage ? asset.usage.map((usage) => usage.id) : [];
@@ -53,6 +54,27 @@
 
 	function toggleEditPowerOfAttorney() {
 		isEditingPowerOfAttorney = !isEditingPowerOfAttorney;
+	}
+
+	function toggleAddNewImage() {
+		isAddingNewImage = !isAddingNewImage;
+	}
+
+	function deleteImage(gambar) {
+		Swal.fire({
+			title: 'Delete Image',
+			text: 'Are you sure you want to delete the image?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+			cancelButtonText: 'Cancel'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				asset.link_gambar = asset.link_gambar.filter((item) => item !== gambar);
+			}
+		});
 	}
 </script>
 
@@ -272,17 +294,65 @@
 				</div>
 			{/if}
 		</div>
-		<!-- <div>
+
+		<div>
 			<label class="text-[#18294E] font-semibold" for="image">Image</label>
-			<input
-				name="image"
-				type="file"
-				placeholder="Upload Image"
-				class="w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
-				required
-				multiple
-			/>
-		</div> -->
+
+			<div class="flex justify-between items-end">
+				{#if asset.link_gambar}
+					<div class="flex flex-wrap gap-4">
+						{#each asset.link_gambar as gambar, i (gambar)}
+							<div class="relative w-48 h-48">
+								<img
+									src={`http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`}
+									alt="{asset.nama} image {i + 1}"
+									class="w-48 h-48 object-cover rounded-md"
+								/>
+
+								<button
+									type="button"
+									class="absolute top-0 right-0 bg-[#18294E] text-white px-1"
+									on:click={() => deleteImage(gambar)}
+								>
+									&times;
+								</button>
+							</div>
+						{/each}
+					</div>
+				{/if}
+				{#if !isAddingNewImage}
+					<button
+						type="button"
+						class="bg-[#18294E] text-white px-6 rounded-lg h-10"
+						on:click={toggleAddNewImage}
+					>
+						Add
+					</button>
+				{/if}
+			</div>
+			<input type="hidden" name="gambar_lama" bind:value={asset.link_gambar} />
+		</div>
+
+		{#if isAddingNewImage}
+			<div class="div">
+				<label class="text-[#18294E] font-semibold" for="gambar_baru">New Image</label>
+				<div class="flex space-x-2">
+					<input
+						name="gambar_baru"
+						type="file"
+						placeholder="Upload Image"
+						class="w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E]"
+						multiple
+						required
+					/>
+					<button
+						class="flex-none bg-[#18294E] text-white px-6 rounded-lg"
+						on:click={toggleAddNewImage}>Cancel</button
+					>
+				</div>
+			</div>
+		{/if}
+
 		<div>
 			<label class="text-[#18294E] font-semibold" for="status">Status</label>
 			<select
