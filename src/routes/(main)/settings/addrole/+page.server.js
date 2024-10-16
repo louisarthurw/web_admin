@@ -8,7 +8,7 @@ const serverDetails = get(server);
 export const load = async ({ params }) => {
     const { id } = params;
     
-    const responsePrivilege = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/priv`, {
+    const responsePrivilege = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/admin/priv`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

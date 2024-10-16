@@ -87,94 +87,95 @@
 
 			mapController = createMapLibreGlMapController(map, maptilersdk);
 
-			allAssets.forEach((asset) => {
-				if (asset.titik_koordinat !== '') {
-					const coords = asset.titik_koordinat.split(',').map((coord) => coord.trim());
+			if (allAssets) {
+				allAssets.forEach((asset) => {
+					if (asset.titik_koordinat !== '') {
+						const coords = asset.titik_koordinat.split(',').map((coord) => coord.trim());
 
-					if (coords.length === 2) {
-						const lng = parseFloat(coords[1]);
-						const lat = parseFloat(coords[0]);
+						if (coords.length === 2) {
+							const lng = parseFloat(coords[1]);
+							const lat = parseFloat(coords[0]);
 
-						if (!isNaN(lat) && !isNaN(lng)) {
-							const popup = new Popup().setHTML(`
+							if (!isNaN(lat) && !isNaN(lng)) {
+								const popup = new Popup().setHTML(`
 					<div class="text-center p-2">
 						<p class="font-bold text-[#18294E] text-lg">${asset.nama}</p>
 					</div>
 				`);
 
-							const marker = new Marker({ color: '#18294E' })
-								.setLngLat([lng, lat])
-								.setPopup(popup)
-								.addTo(map);
+								const marker = new Marker({ color: '#18294E' })
+									.setLngLat([lng, lat])
+									.setPopup(popup)
+									.addTo(map);
 
-							marker.getElement().addEventListener('click', () => {
-								map.flyTo({ center: [lng, lat], zoom: 18 });
+								marker.getElement().addEventListener('click', () => {
+									map.flyTo({ center: [lng, lat], zoom: 18 });
 
-								selectedMarker = marker;
-								showRadiusInput = true;
+									selectedMarker = marker;
+									showRadiusInput = true;
 
-								if (map.getLayer('asset-circle-layer')) {
-									map.removeLayer('asset-circle-layer');
-									map.removeSource('asset-circle-source');
-								}
-
-								const circleGeoJSON = createGeoJSONCircle([lng, lat], radius);
-
-								map.addSource('asset-circle-source', {
-									type: 'geojson',
-									data: circleGeoJSON
-								});
-
-								map.addLayer({
-									id: 'asset-circle-layer',
-									type: 'fill',
-									source: 'asset-circle-source',
-									layout: {},
-									paint: {
-										'fill-color': '#007cbf',
-										'fill-opacity': 0.3
-									}
-								});
-
-								popup.on('close', () => {
 									if (map.getLayer('asset-circle-layer')) {
 										map.removeLayer('asset-circle-layer');
 										map.removeSource('asset-circle-source');
 									}
-									showRadiusInput = false;
-									radius = 0.5;
+
+									const circleGeoJSON = createGeoJSONCircle([lng, lat], radius);
+
+									map.addSource('asset-circle-source', {
+										type: 'geojson',
+										data: circleGeoJSON
+									});
+
+									map.addLayer({
+										id: 'asset-circle-layer',
+										type: 'fill',
+										source: 'asset-circle-source',
+										layout: {},
+										paint: {
+											'fill-color': '#007cbf',
+											'fill-opacity': 0.3
+										}
+									});
+
+									popup.on('close', () => {
+										if (map.getLayer('asset-circle-layer')) {
+											map.removeLayer('asset-circle-layer');
+											map.removeSource('asset-circle-source');
+										}
+										showRadiusInput = false;
+										radius = 0.5;
+									});
 								});
-							});
 
-							allSurveyors.forEach((surveyor) => {
-								if (surveyor.lokasi) {
-									const el = document.createElement('div');
-									el.className = 'custom-marker';
+								allSurveyors.forEach((surveyor) => {
+									if (surveyor.lokasi) {
+										const el = document.createElement('div');
+										el.className = 'custom-marker';
 
-									if (surveyor.availability_surveyor === 'Y') {
-										el.style.backgroundImage = 'url(/surveyor_active.png)';
-									} else if (surveyor.availability_surveyor === 'N') {
-										el.style.backgroundImage = 'url(/surveyor_inactive.png)';
-									}
+										if (surveyor.availability_surveyor === 'Y') {
+											el.style.backgroundImage = 'url(/surveyor_active.png)';
+										} else if (surveyor.availability_surveyor === 'N') {
+											el.style.backgroundImage = 'url(/surveyor_inactive.png)';
+										}
 
-									el.style.backgroundSize = 'cover';
-									el.style.width = '16px';
-									el.style.height = '16px';
+										el.style.backgroundSize = 'cover';
+										el.style.width = '16px';
+										el.style.height = '16px';
 
-									const surveyorCoords = surveyor.lokasi.split(',').map((coord) => coord.trim());
+										const surveyorCoords = surveyor.lokasi.split(',').map((coord) => coord.trim());
 
-									if (surveyorCoords.length === 2) {
-										const surveyorLng = parseFloat(surveyorCoords[1]);
-										const surveyorLat = parseFloat(surveyorCoords[0]);
+										if (surveyorCoords.length === 2) {
+											const surveyorLng = parseFloat(surveyorCoords[1]);
+											const surveyorLat = parseFloat(surveyorCoords[0]);
 
-										if (!isNaN(surveyorLng) && !isNaN(surveyorLat)) {
-											const marker = new Marker({ element: el })
-												.setLngLat([surveyorLng, surveyorLat])
-												.addTo(map);
+											if (!isNaN(surveyorLng) && !isNaN(surveyorLat)) {
+												const marker = new Marker({ element: el })
+													.setLngLat([surveyorLng, surveyorLat])
+													.addTo(map);
 
-											const availabilityColor =
-												surveyor.availability_surveyor === 'Y' ? '#00FF38' : '#FF0000';
-											const popupContent = `
+												const availabilityColor =
+													surveyor.availability_surveyor === 'Y' ? '#00FF38' : '#FF0000';
+												const popupContent = `
 		<form
 			action="?/createSurveyReq"
 			method="post"
@@ -231,51 +232,52 @@
 		</form>
         `;
 
-											const popupAssign = new Popup({ maxWidth: '350px' }).setHTML(popupContent);
-											marker.setPopup(popupAssign);
+												const popupAssign = new Popup({ maxWidth: '350px' }).setHTML(popupContent);
+												marker.setPopup(popupAssign);
 
-											marker.getElement().addEventListener('click', () => {
-												map.flyTo({
-													center: [
-														surveyorLng,
-														surveyor.availability_surveyor === 'Y'
-															? surveyorLat + 0.0005
-															: surveyorLat
-													],
-													zoom: 18
+												marker.getElement().addEventListener('click', () => {
+													map.flyTo({
+														center: [
+															surveyorLng,
+															surveyor.availability_surveyor === 'Y'
+																? surveyorLat + 0.0005
+																: surveyorLat
+														],
+														zoom: 18
+													});
+
+													setTimeout(() => {
+														const selectElement = document.getElementById(
+															`asset-select-${surveyor.user_id}`
+														);
+
+														if (selectElement) {
+															selectElement.innerHTML =
+																'<option value="" class="text-gray-500" disabled selected>Choose Asset</option>';
+															allAssets.forEach((asset) => {
+																const option = document.createElement('option');
+																option.value = asset.id_asset;
+																option.textContent = asset.nama;
+																selectElement.appendChild(option);
+															});
+														}
+													}, 100);
 												});
-
-												setTimeout(() => {
-													const selectElement = document.getElementById(
-														`asset-select-${surveyor.user_id}`
-													);
-
-													if (selectElement) {
-														selectElement.innerHTML =
-															'<option value="" class="text-gray-500" disabled selected>Choose Asset</option>';
-														allAssets.forEach((asset) => {
-															const option = document.createElement('option');
-															option.value = asset.id_asset;
-															option.textContent = asset.nama;
-															selectElement.appendChild(option);
-														});
-													}
-												}, 100);
-											});
+											}
 										}
+									} else {
+										console.warn(`No lokasi provided for surveyor: ${surveyor.nama_lengkap}`);
 									}
-								} else {
-									console.warn(`No lokasi provided for surveyor: ${surveyor.nama_lengkap}`);
-								}
-							});
+								});
+							}
 						}
+					} else {
+						console.warn(
+							`No coordinates provided for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
+						);
 					}
-				} else {
-					console.warn(
-						`No coordinates provided for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
-					);
-				}
-			});
+				});
+			}
 		}
 	});
 

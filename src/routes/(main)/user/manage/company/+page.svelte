@@ -8,7 +8,7 @@
 	const companies = data.companies;
 
 	let searchQuery = '';
-	let filteredCompanies = companies;
+	let filteredCompanies = companies ? companies : [];
 
 	let currentPage = 1;
 	let itemsPerPage = 9;

@@ -11,6 +11,7 @@
 	export let data;
 	const admin = data.user;
 	const serverDetails = get(server);
+	console.log(admin)
 
 	let isEditing = false;
 

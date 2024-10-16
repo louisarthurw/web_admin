@@ -28,7 +28,6 @@ export const actions = {
         });
 
         const result = await response.json();
-        console.log("result: ", result)
 
         if (result.status === 200) {
             const authValue = {
@@ -59,7 +58,7 @@ export const actions = {
             auth.set(authValue);
             console.log(get(auth))
 
-            return { message: result.message }
+            return { message: result.message, authh: authValue }
         } else {
             return fail(400, { message: result.message });
         }

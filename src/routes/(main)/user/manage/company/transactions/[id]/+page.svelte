@@ -121,7 +121,12 @@
 								</div>
 							{/if}
 						{:else}
-							<p class="text-red-500 font-bold rounded-md">DECLINED</p>
+							<div class="mb-4">
+								<p class="font-bold text-[#18294E] ml-1 mb-1">{prog.nama}</p>
+								<div class="bg-[#18294E] text-white p-4 rounded-md">
+									<p class="text-white font-bold rounded-md">DECLINED</p>
+								</div>
+							</div>
 						{/if}
 					{/each}
 				</div>

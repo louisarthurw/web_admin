@@ -6,7 +6,7 @@
 	import Navbar5 from '$lib/components/Navbar5.svelte';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 
 	export let data;
@@ -18,6 +18,13 @@
 		const asset = allAsset.find((a) => a.id_asset === id);
 		return asset.nama;
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar3 currentPage={$page.url.pathname}></Navbar3>
@@ -99,12 +106,14 @@
 
 		<div class="flex justify-between pt-4">
 			<div class="w-5/12"></div>
-			<button
-				type="submit"
-				class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4 text-lg"
-			>
-				SAVE
-			</button>
+			{#if privilege_id.includes(14)}
+				<button
+					type="submit"
+					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4 text-lg"
+				>
+					SAVE
+				</button>
+			{/if}
 			<div class="w-5/12"></div>
 		</div>
 	</form>

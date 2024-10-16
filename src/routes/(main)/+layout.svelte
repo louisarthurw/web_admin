@@ -11,7 +11,8 @@
 	let userInfo = {
 		nama_lengkap: 'ADMIN',
 		foto_profil: 'default_profile_icon.png',
-		email: 'adminn@gmail.com'
+		email: 'adminn@gmail.com',
+		privileges: ''
 	};
 	let isDataFetched = false;
 	let currentPage = '';
@@ -41,6 +42,7 @@
 		foto_profil={userInfo.foto_profil === '' ? '/default_profile_icon.png' : `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${userInfo.foto_profil}`}
 		email={userInfo.email}
 		currentPage={$page.url.pathname}
+		privileges={userInfo.privileges}
 	></Navbar>
 	<slot />
 {/if}

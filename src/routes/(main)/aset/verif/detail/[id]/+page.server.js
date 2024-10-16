@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { server } from '$lib/store';
+import { server, auth } from '$lib/store';
 import { fail, redirect } from '@sveltejs/kit';
 import { page } from '$app/stores';
 import { get } from 'svelte/store';
@@ -31,12 +31,15 @@ export const load = async ({ params }) => {
 export const actions = {
     verificate: async ({ request, params }) => {
         const { id } = params;
+        const authValue = get(auth);
+        const idAdmin = authValue.id;
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
         const payload = {
             surveyreq_id: parseInt(id),
+            senderId: parseInt(idAdmin)
         };
 
         console.log(payload)

@@ -7,7 +7,7 @@
 	import Swal from 'sweetalert2';
 	import { onMount, onDestroy } from 'svelte';
 	import '@maptiler/sdk/dist/maptiler-sdk.css';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 
 	export let data;
@@ -158,6 +158,13 @@
 	function getTags(arrayTag) {
 		return arrayTag.map((item) => item.nama).join(', ');
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar3 currentPage={$page.url.pathname}></Navbar3>
@@ -304,7 +311,7 @@
 
 		<div class="flex justify-between pt-8">
 			{#if surveyData.status_verifikasi === 'N'}
-				<div class="w-1/3"></div>
+				<div class="w-1/4"></div>
 				<button
 					type="button"
 					on:click={back}
@@ -312,6 +319,15 @@
 				>
 					BACK
 				</button>
+				{#if privilege_id.includes(7)}
+					<button
+						type="button"
+						on:click={() => reassign(surveyData.id_transaksi_jual_sewa)}
+						class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
+					>
+						REASSIGN
+					</button>
+				{/if}
 				<button
 					type="submit"
 					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140]
@@ -319,13 +335,13 @@
 				>
 					VERIFICATE
 				</button>
-				<div class="w-1/3"></div>
+				<div class="w-1/4"></div>
 			{:else if surveyData.status_verifikasi === 'V'}
 				<div class="w-1/3"></div>
 				<button
 					type="button"
 					on:click={back}
-					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
+					class="w-1/6 px-4 py-2 font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
 				>
 					BACK
 				</button>
@@ -339,13 +355,15 @@
 				>
 					BACK
 				</button>
-				<button
-					type="button"
-					on:click={() => reassign(surveyData.id_transaksi_jual_sewa)}
-					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
-				>
-					REASSIGN
-				</button>
+				{#if privilege_id.includes(7)}
+					<button
+						type="button"
+						on:click={() => reassign(surveyData.id_transaksi_jual_sewa)}
+						class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
+					>
+						REASSIGN
+					</button>
+				{/if}
 				<div class="w-1/3"></div>
 			{/if}
 		</div>

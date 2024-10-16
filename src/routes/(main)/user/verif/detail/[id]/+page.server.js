@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { server } from '$lib/store';
+import { server, auth } from '$lib/store';
 import { fail, redirect } from '@sveltejs/kit';
 import { page } from '$app/stores';
 import { get } from 'svelte/store';
@@ -59,6 +59,8 @@ export const load = async ({ params }) => {
 export const actions = {
     acceptCompanyVerifReq: async ({ request, params }) => {
         const { id } = params;
+        const authValue = get(auth);
+        const idAdmin = authValue.id;
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
@@ -66,7 +68,8 @@ export const actions = {
         const payload = {
             perusahaan_id: parseInt(id),
             kelas: parseInt(entries.kelas),
-            business_field: entries.selectedField
+            business_field: entries.selectedField,
+            senderId: parseInt(idAdmin)
         };
 
         console.log("payload: ", payload)
@@ -97,13 +100,16 @@ export const actions = {
 
     declineCompanyVerifReq: async ({ request, params }) => {
         const { id } = params;
+        const authValue = get(auth);
+        const idAdmin = authValue.id;
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
         const payload = {
             perusahaan_id: parseInt(id),
-            decline_message: entries.alasan
+            decline_message: entries.alasan,
+            senderId: parseInt(idAdmin)
         };
 
         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/verify/perusahaan/decline`, {

@@ -54,6 +54,8 @@ export const load = async ({ params }) => {
 export const actions = {
     reassignSurveyor: async ({ request, params }) => {
         const { id } = params;
+        const authValue = get(auth);
+        const idAdmin = authValue.id;
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
@@ -61,7 +63,8 @@ export const actions = {
         const payload = {
             surveyreq_id: parseInt(id),
             user_id: parseInt(entries.user_id),
-            dateline: entries.dateline
+            dateline: entries.dateline,
+            senderId: parseInt(idAdmin)
         };
 
         // payload.append('surveyreq_id', parseInt(id));

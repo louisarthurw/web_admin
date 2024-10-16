@@ -5,6 +5,8 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
+	import { auth } from '$lib/store';
+	import { get } from 'svelte/store';
 
 	export let data;
 	const user = data.user;
@@ -33,6 +35,13 @@
 		});
 		return formattedCompanies;
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
@@ -147,11 +156,13 @@
 			>
 				BACK
 			</button>
-			<button
-				type="submit"
-				class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
-				>SAVE</button
-			>
+			{#if privilege_id.includes(21)}
+				<button
+					type="submit"
+					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
+					>SAVE</button
+				>
+			{/if}
 			<div class="w-1/3"></div>
 		</div>
 	</form>

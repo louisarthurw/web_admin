@@ -3,7 +3,7 @@
 	import Navbar3 from '$lib/components/Navbar3.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
@@ -20,7 +20,7 @@
 
 	let searchQuery = '';
 	let filteredAssets = assets;
-	console.log(filteredAssets)
+	console.log(filteredAssets);
 	let filteredChildAssets = [];
 
 	let showFilterPopup = false;
@@ -42,111 +42,7 @@
 		{ id: 2, name: 'Rented', value: 'T' }
 	];
 
-	// assets.forEach((asset) => {
-	// 	if (asset.child && asset.child.length > 0) {
-	// 		asset.child.forEach((child) => {
-	// 			filteredChildAssets.push({
-	// 				...child,
-	// 				parentId: asset.id,
-	// 				parentName: asset.name,
-	// 				parentImage: asset.image,
-	// 				parentProvince: asset.province
-	// 			});
-	// 		});
-	// 	}
-	// });
-
-	// function handleSearch() {
-	// 	if (searchQuery.trim() === '') {
-	// 		filteredAssets = assets;
-	// 		filteredChildAssets = assets.reduce((acc, asset) => {
-	// 			if (asset.child && asset.child.length > 0) {
-	// 				asset.child.forEach((child) => {
-	// 					acc.push({
-	// 						...child,
-	// 						parentId: asset.id,
-	// 						parentName: asset.name,
-	// 						parentImage: asset.image,
-	// 						parentProvince: asset.province
-	// 					});
-	// 				});
-	// 			}
-	// 			return acc;
-	// 		}, []);
-	// 	} else {
-	// 		filteredAssets = assets.filter((asset) =>
-	// 			asset.name.toLowerCase().includes(searchQuery.toLowerCase())
-	// 		);
-	// 		filteredChildAssets = filteredChildAssets.filter((childAsset) =>
-	// 			childAsset.name.toLowerCase().includes(searchQuery.toLowerCase())
-	// 		);
-	// 	}
-	// }
-
-	function applyFilter() {
-		// filteredAssets = assets.filter((asset) => {
-		// 	const matchesType = selectedType.length === 0 || selectedType.includes(asset.type);
-		// 	const matchesStatus =
-		// 		selectedStatus.length === 0 ||
-		// 		selectedStatus.some((status) => asset.statusAsset.includes(status));
-		// 	const matchesTag =
-		// 		selectedTag.length === 0 || selectedTag.some((tag) => asset.tags.includes(tag));
-		// 	const matchesProvince =
-		// 		selectedProvince.length === 0 || selectedProvince.includes(asset.province);
-
-		// 	return matchesType && matchesStatus && matchesTag && matchesProvince;
-		// });
-
-		// filteredChildAssets = [];
-		// assets.forEach((asset) => {
-		// 	if (asset.child && asset.child.length > 0) {
-		// 		asset.child.forEach((child) => {
-		// 			const matchesType = selectedType.length === 0 || selectedType.includes(child.type);
-		// 			const matchesStatus =
-		// 				selectedStatus.length === 0 ||
-		// 				selectedStatus.some((status) => child.statusAsset.includes(status));
-		// 			const matchesTag =
-		// 				selectedTag.length === 0 || selectedTag.some((tag) => child.tags.includes(tag));
-		// 			const matchesProvince =
-		// 				selectedProvince.length === 0 || selectedProvince.includes(asset.province);
-
-		// 			if (matchesType && matchesStatus && matchesTag && matchesProvince) {
-		// 				filteredChildAssets.push({
-		// 					...child,
-		// 					parentId: asset.id,
-		// 					parentName: asset.name,
-		// 					parentImage: asset.image,
-		// 					parentProvince: asset.province
-		// 				});
-		// 			}
-		// 		});
-		// 	}
-		// });
-
-		closeFilterPopup();
-	}
-
 	function resetFilter() {
-		// selectedType = [];
-		// selectedStatus = [];
-		// selectedTag = [];
-		// selectedProvince = [];
-
-		// filteredAssets = assets;
-		// filteredChildAssets = assets.reduce((acc, asset) => {
-		// 	if (asset.child && asset.child.length > 0) {
-		// 		asset.child.forEach((child) => {
-		// 			acc.push({
-		// 				...child,
-		// 				parentId: asset.id,
-		// 				parentName: asset.name,
-		// 				parentImage: asset.image,
-		// 				parentProvince: asset.province
-		// 			});
-		// 		});
-		// 	}
-		// 	return acc;
-		// }, []);
 		filteredAssets = assets;
 		selectedType = [];
 		selectedTypeString = '';
@@ -180,6 +76,13 @@
 		const asset = assets.find((a) => a.id_asset === id);
 		return asset.nama;
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar3 currentPage={$page.url.pathname}></Navbar3>
@@ -194,10 +97,12 @@
 				placeholder="Search Asset"
 				class="flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			/>
-			<button
-				class="flex-none bg-[#18294E] text-white px-4 py-2 rounded-lg"
-				on:click={() => goto('/aset/manage/add')}>Add Asset</button
-			>
+			{#if privilege_id.includes(9)}
+				<button
+					class="flex-none bg-[#18294E] text-white px-4 py-2 rounded-lg"
+					on:click={() => goto('/aset/manage/add')}>Add Asset</button
+				>
+			{/if}
 			<button
 				class="flex-none bg-[#18294E] text-white px-4 py-2 rounded-lg"
 				on:click={openFilterPopup}>Filter</button
@@ -236,29 +141,6 @@
 				</button>
 			{/each}
 		{/if}
-
-		<!-- {#each filteredChildAssets as childAsset}
-			{#if childAsset.status === 'active'}
-				<button
-					class="flex w-[90vw] bg-white p-4 border rounded-lg shadow mb-4"
-					on:click={() => goToDetails(childAsset.parentId)}
-				>
-					<img
-						src={childAsset.parentImage}
-						alt={childAsset.parentName}
-						class="w-24 h-24 rounded-lg mr-6 object-cover"
-					/>
-
-					<div class="flex flex-col text-left h-24 justify-center">
-						<p class="text-[#18294E] font-bold text-2xl">{childAsset.name}</p>
-						<p class="text-[#18294E] font-semibold text-lg">[Child dari {childAsset.parentName}]</p>
-						<p class="text-[#18294E] text-lg">
-							Status: <span class="font-bold">{childAsset.statusAsset}</span>
-						</p>
-					</div>
-				</button>
-			{/if}
-		{/each} -->
 	</div>
 </div>
 

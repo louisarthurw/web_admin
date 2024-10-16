@@ -38,42 +38,45 @@
 				);
 
 				const data = await response.json();
-				data.data.forEach((asset) => {
-					if (asset.titik_koordinat) {
-						const [lat, lng] = asset.titik_koordinat
-							.split(',')
-							.map((coord) => parseFloat(coord.trim()));
+				console.log(data);
+				if (data.data) {
+					data.data.forEach((asset) => {
+						if (asset.titik_koordinat) {
+							const [lat, lng] = asset.titik_koordinat
+								.split(',')
+								.map((coord) => parseFloat(coord.trim()));
 
-						if (!isNaN(lat) && !isNaN(lng)) {
-							const popup = new Popup().setHTML(`
+							if (!isNaN(lat) && !isNaN(lng)) {
+								const popup = new Popup().setHTML(`
 								<div class="text-center space-y-2">
 									<p class="font-bold text-[#18294E] text-lg">${asset.nama}</p>
 									<button class="zoom-button w-full p-2 bg-[#18294E] text-white text-md font-semibold rounded hover:bg-[#0f1c33] transition-colors">Zoom</button>
 								</div>`);
 
-							popup.on('open', () => {
-								const zoomButton = marker.getPopup().getElement().querySelector('.zoom-button');
-								zoomButton.addEventListener('click', () => {
-									map.flyTo({ center: [lng, lat], zoom: 18 });
-									marker.getPopup().remove();
+								popup.on('open', () => {
+									const zoomButton = marker.getPopup().getElement().querySelector('.zoom-button');
+									zoomButton.addEventListener('click', () => {
+										map.flyTo({ center: [lng, lat], zoom: 18 });
+										marker.getPopup().remove();
+									});
 								});
-							});
 
-							const marker = new Marker({ color: '#18294E' })
-								.setLngLat([lng, lat])
-								.setPopup(popup)
-								.addTo(map);
+								const marker = new Marker({ color: '#18294E' })
+									.setLngLat([lng, lat])
+									.setPopup(popup)
+									.addTo(map);
+							} else {
+								console.warn(
+									`Invalid coordinates for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
+								);
+							}
 						} else {
 							console.warn(
-								`Invalid coordinates for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
+								`No coordinates provided for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
 							);
 						}
-					} else {
-						console.warn(
-							`No coordinates provided for asset ID: ${asset.id_asset}, Name: ${asset.nama}`
-						);
-					}
-				});
+					});
+				}
 			} catch (error) {
 				console.error('Error fetching assets:', error);
 			}

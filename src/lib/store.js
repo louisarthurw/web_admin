@@ -5,23 +5,28 @@ export const server = writable({
     port: 1762
 });
 
-export const auth = writable({
+let authData = null;
+
+if (typeof document !== 'undefined') {
+    const authCookie = document.cookie.split('; ').find(row => row.startsWith('auth='));
+    if (authCookie) {
+        authData = JSON.parse(decodeURIComponent(authCookie.split('=')[1]));
+    }
+}
+
+export const auth = writable(authData || {
     alamat: null,
-    denied_by_admin: null,
     email: null,
-    first_login: null,
     foto_profil: null,
     id: null,
     jenis_kelamin: null,
     ktp: null,
     nama_lengkap: null,
-    nama_privilege: null,
     nomor_telepon: null,
-    privilege_id: null,
+    privileges: [],
     role_id: null,
     role_nama: null,
     status: null,
     tanggal_lahir: null,
-    tipe: null,
     username: null
 });

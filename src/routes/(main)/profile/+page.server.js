@@ -5,11 +5,12 @@ import { page } from '$app/stores';
 import { get } from 'svelte/store';
 
 const serverDetails = get(server);
-const authValue = get(auth)
-console.log(authValue)
 
 export const load = async () => {
-    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/admin/${authValue.id}`, {
+    const authValue = get(auth);
+    const idAdmin = authValue.id;
+
+    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/admin/${idAdmin}`, {
         method: 'GET',
     });
 

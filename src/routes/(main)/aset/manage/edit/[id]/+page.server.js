@@ -78,7 +78,6 @@ export const actions = {
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
         const gambar_lama = entries.gambar_lama.split(",");
-        console.log(gambar_lama)
         const gambar_new = formData.getAll('gambar_baru');
 
         const payload = new FormData();

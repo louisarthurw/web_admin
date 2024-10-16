@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { server } from '$lib/store';
+import { fail, redirect } from '@sveltejs/kit';
+import { server, auth } from '$lib/store';
 import { get } from 'svelte/store';
 
 const serverDetails = get(server);
@@ -36,6 +37,9 @@ export const load = async () => {
 /** @type {import('./$types').Actions} */
 export const actions = {
     createSurveyReq: async ({ request }) => {
+        const authValue = get(auth);
+        const idAdmin = authValue.id;
+
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
@@ -45,6 +49,7 @@ export const actions = {
         payload.append('idUser', String(entries.user_id));
         payload.append('dateline', String(entries.dateline));
         payload.append('surat', entries.surat);
+        payload.append('senderId', idAdmin);
 
         console.log("payload: ", payload)
 
@@ -54,6 +59,8 @@ export const actions = {
         });
 
         const result = await response.json();
+
+        console.log("result: ", result)
 
         if (result.status === 200) {
             return { success: true, message: result.message }

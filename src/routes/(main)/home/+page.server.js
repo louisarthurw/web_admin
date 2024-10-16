@@ -18,10 +18,10 @@ export const load = async () => {
     const result = await response.json();
     const assets = result.data;
 
-    const totalAsset = assets.length;
-    const totalLand = assets.filter(asset => asset.tipe === 'L').length;
-    const totalBuilding = assets.filter(asset => asset.tipe === 'B').length;
-    const totalApartmentRoom = assets.filter(asset => asset.tipe === 'A').length;
+    const totalAsset = assets ? assets.length : 0;
+    const totalLand = assets ? assets.filter(asset => asset.tipe === 'L').length : 0;
+    const totalBuilding = assets ? assets.filter(asset => asset.tipe === 'B').length : 0;
+    const totalApartmentRoom = assets ? assets.filter(asset => asset.tipe === 'A').length : 0;
 
     return {
         totalAsset: totalAsset,

@@ -2,6 +2,8 @@
 	// @ts-nocheck
 	import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+	import { auth } from '$lib/store';
+	import { get } from 'svelte/store';
 	export let currentPage = '';
 
 	let assetId = $page.params.id;

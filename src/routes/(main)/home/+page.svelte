@@ -2,10 +2,20 @@
 	// @ts-nocheck
 	import Map from '$lib/components/Map.svelte';
 	import { goto } from '$app/navigation';
+	import { auth } from '$lib/store';
+	import { get } from 'svelte/store';
 	import { server } from '$lib/store';
 	import { onMount } from 'svelte';
 
 	export let data;
+	console.log(data)
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <div class="relative">
@@ -32,13 +42,16 @@
 				<div class="text-sm font-semibold">Apartment Rooms</div>
 			</div>
 		</div>
+
 		<div>
-			<button
-				class="bg-[#18294E] text-lg text-white font-semibold py-5 px-10 rounded-lg hover:bg-[#152140] transition duration-200"
-				on:click={() => goto('/surveyor/assign')}
-			>
-				Survey Asset
-			</button>
+			{#if privilege_id.includes(2)}
+				<button
+					class="bg-[#18294E] text-lg text-white font-semibold py-5 px-10 rounded-lg hover:bg-[#152140] transition duration-200"
+					on:click={() => goto('/surveyor/assign')}
+				>
+					Survey Asset
+				</button>
+			{/if}
 		</div>
 	</div>
 </div>

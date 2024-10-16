@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 
 	export let data;
@@ -52,6 +52,13 @@
 	function getFileName(path) {
 		return path.split('/').pop();
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
@@ -166,7 +173,7 @@
 			</div>
 		{/if}
 
-		{#if transactionRequestDetail.status === 'W'}
+		{#if transactionRequestDetail.status === 'W' && privilege_id.includes(16)}
 			<div class="flex justify-between pt-8">
 				<div class="w-1/3"></div>
 				<button

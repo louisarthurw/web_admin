@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 
 	export let data;
@@ -84,6 +84,13 @@
 	function getFileName(path) {
 		return path.split('/').pop();
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar4 currentPage={$page.url.pathname}></Navbar4>
@@ -249,7 +256,7 @@
 				/>
 			</div>
 		{/if}
-		{#if companyVerifReq.status === 'W'}
+		{#if companyVerifReq.status === 'W' && privilege_id.includes(18)}
 			<div class="flex justify-between pt-8">
 				<div class="w-1/3"></div>
 				<button
@@ -378,7 +385,12 @@
 					>
 						<option value="" disabled selected>Choose class</option>
 						{#each allClasses as kelas}
-							<option value={kelas.id}>{kelas.nama}</option>
+							<option value={kelas.id}>
+								<span style="display: inline-block; min-width: 150px;">{kelas.nama}</span>
+								({kelas.modal_minimal.toLocaleString('id-ID')} - {kelas.modal_maksimal.toLocaleString(
+									'id-ID'
+								)})
+							</option>
 						{/each}
 					</select>
 				</div>

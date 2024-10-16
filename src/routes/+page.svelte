@@ -2,6 +2,8 @@
 	// @ts-nocheck
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { auth } from '$lib/store';
+	import { get } from 'svelte/store';
 	import Swal from 'sweetalert2';
 </script>
 
@@ -18,6 +20,8 @@
 					await update({ reset: false });
 
 					if (result.status === 200) {
+						auth.set(result.data.authh);
+						console.log(get(auth))
 						Swal.fire({
 							icon: 'success',
 							title: 'Login berhasil!',

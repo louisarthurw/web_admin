@@ -22,7 +22,7 @@ export const load = async ({ params }) => {
     const result = await response.json();
     const role = result.data;
 
-    const responsePrivilege = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/priv`, {
+    const responsePrivilege = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/admin/priv`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -53,6 +53,7 @@ export const actions = {
             id: parseInt(id),
             role: entries.nama,
             privilege: entries.privilege,
+            admin_role: 'Y'
         };
 
         if (payload.privilege === '') {

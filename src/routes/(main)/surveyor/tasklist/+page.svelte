@@ -2,6 +2,8 @@
 	// @ts-nocheck
 	import Navbar2 from '$lib/components/Navbar2.svelte';
 	import { page } from '$app/stores';
+	import { auth } from '$lib/store';
+	import { get } from 'svelte/store';
 	import { goto } from '$app/navigation';
 
 	export let data;
@@ -62,6 +64,13 @@
 	function goToPage(pageNumber) {
 		currentPage = pageNumber;
 	}
+
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
+
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
@@ -76,12 +85,14 @@
 				on:input={handleSearch}
 				class="flex-grow border border-gray-300 rounded-lg px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-[#18294E]"
 			/>
-			<button
-				class="flex-none bg-[#18294E] text-white px-4 py-2 rounded-lg"
-				on:click={() => goto('/surveyor/tasklist/assign')}
-			>
-				Assign Surveyor
-			</button>
+			{#if privilege_id.includes(2)}
+				<button
+					class="flex-none bg-[#18294E] text-white px-4 py-2 rounded-lg"
+					on:click={() => goto('/surveyor/tasklist/assign')}
+				>
+					Assign Surveyor
+				</button>
+			{/if}
 		</div>
 	</div>
 	<div class="flex justify-center">

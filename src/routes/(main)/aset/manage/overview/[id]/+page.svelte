@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import Navbar5 from '$lib/components/Navbar5.svelte';
-	import { server } from '$lib/store';
+	import { server, auth } from '$lib/store';
 	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import Swal from 'sweetalert2';
@@ -28,11 +28,6 @@
 
 	const allAsset = data.allAsset;
 	const serverDetails = get(server);
-
-	// let assetId = $page.params.id;
-	// let asset = assets.find((a) => a.id == assetId);
-
-	// let activeChildAssets = asset.child.filter(child => child.status === 'active');
 
 	onMount(async () => {
 		if (mapContainer) {
@@ -147,17 +142,12 @@
 		goto(`/aset/manage/overview/${id}`);
 	}
 
-	// function getJoinedAsset(id_join) {
-	// 	const ids = id_join.split(',').map((id) => parseInt(id.trim(), 10));
-	// 	console.log('ids: ', ids)
+	function getPrivilegeIds(data) {
+		return data.map((item) => item.privilege_id);
+	}
 
-	// 	const filteredAssets = allAsset.filter((asset) => ids.includes(asset.id_asset));
-	// 	console.log('filtered assets: ', filteredAssets)
-
-	// 	const assetNames = filteredAssets.map((asset) => asset.nama);
-
-	// 	return assetNames.join(', ');
-	// }
+	let authValue = get(auth);
+	let privilege_id = getPrivilegeIds(authValue.privileges);
 </script>
 
 <Navbar3 currentPage={$page.url.pathname}></Navbar3>
@@ -200,39 +190,44 @@
 				<span>{asset.id_asset}</span>
 			</div>
 			<div class="flex space-x-2">
-				{#if asset.id_join !== '0' && asset.id_asset_child === ''}
-					<form
-						action="?/unmerge"
-						method="post"
-						use:enhance={() => {
-							return async ({ result, update }) => {
-								await update({ reset: false });
+				{#if privilege_id.includes(13)}
+					{#if asset.id_join !== '0' && asset.id_asset_child === ''}
+						<form
+							action="?/unmerge"
+							method="post"
+							use:enhance={() => {
+								return async ({ result, update }) => {
+									await update({ reset: false });
 
-								if (result.status === 200) {
-									Swal.fire({
-										icon: 'success',
-										title: 'Berhasil Unmerge Asset!',
-										text: result.data.message
-									}).then(() => {
-										goto('/aset/manage');
-									});
-								} else {
-									Swal.fire({
-										icon: 'error',
-										title: 'Gagal Unmerge Asset!',
-										text: result.data.message
-									});
-								}
-							};
-						}}
-					>
-						<button class="bg-[#18294E] text-white px-4 rounded-lg">Unmerge</button>
-					</form>
+									if (result.status === 200) {
+										Swal.fire({
+											icon: 'success',
+											title: 'Berhasil Unmerge Asset!',
+											text: result.data.message
+										}).then(() => {
+											console.log('berhasil')
+											goto('/aset/manage');
+										});
+									} else {
+										Swal.fire({
+											icon: 'error',
+											title: 'Gagal Unmerge Asset!',
+											text: result.data.message
+										});
+									}
+								};
+							}}
+						>
+							<button class="bg-[#18294E] text-white px-4 rounded-lg">Unmerge</button>
+						</form>
+					{/if}
 				{/if}
-				<button
-					class="bg-[#18294E] text-white px-4 rounded-lg"
-					on:click={() => goto(`/aset/manage/edit/${asset.id_asset}`)}>Edit</button
-				>
+				{#if privilege_id.includes(10)}
+					<button
+						class="bg-[#18294E] text-white px-4 rounded-lg"
+						on:click={() => goto(`/aset/manage/edit/${asset.id_asset}`)}>Edit</button
+					>
+				{/if}
 			</div>
 		</div>
 		<div class="flex">
@@ -412,12 +407,12 @@
 							<li class="flex">
 								<span class="min-w-[190px] font-semibold">Coordinate Boundaries</span>
 								<span class="ml-2 mr-4">:</span>
-								<span>{childAsset.batas_koordinat}</span>
-								<!-- <div>
-									{#each childAsset.coordinateBoundaries.split('\n') as boundary}
+								<!-- <span>{childAsset.batas_koordinat}</span> -->
+								<div>
+									{#each childAsset.batas_koordinat.split('\n') as boundary}
 										<p>{boundary}</p>
 									{/each}
-								</div> -->
+								</div>
 							</li>
 						</ul>
 					</li>
@@ -427,20 +422,24 @@
 
 		<div class="flex justify-between">
 			<div class="w-1/3"></div>
-			<button
-				type="button"
-				class="w-1/6 px-4 py-2 font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
-				on:click={() => joinChild(asset.id_asset)}
-			>
-				Join Asset ID
-			</button>
-			<button
-				type="button"
-				class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
-				on:click={() => createChild(asset.id_asset)}
-			>
-				Add Asset ID
-			</button>
+			{#if privilege_id.includes(12)}
+				<button
+					type="button"
+					class="w-1/6 px-4 py-2 font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md hover:bg-[#E2E6EA] transition duration-200"
+					on:click={() => joinChild(asset.id_asset)}
+				>
+					Join Asset ID
+				</button>
+			{/if}
+			{#if privilege_id.includes(11)}
+				<button
+					type="button"
+					class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
+					on:click={() => createChild(asset.id_asset)}
+				>
+					Add Asset ID
+				</button>
+			{/if}
 			<div class="w-1/3"></div>
 		</div>
 	</div>
