@@ -116,6 +116,9 @@
 
 									if (map.getLayer('asset-circle-layer')) {
 										map.removeLayer('asset-circle-layer');
+									}
+
+									if (map.getSource('asset-circle-source')) {
 										map.removeSource('asset-circle-source');
 									}
 

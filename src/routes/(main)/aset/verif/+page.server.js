@@ -9,7 +9,7 @@ const serverDetails = get(server);
 export const load = async ({ params }) => {
     const { id } = params;
 
-    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/survey_req/detail`, {
+    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/survey_req/detail/custom`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

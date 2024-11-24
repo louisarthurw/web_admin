@@ -263,6 +263,14 @@
 							class="w-48 h-48 object-cover rounded-md"
 						/>
 					{/each}
+					{#if surveyData.gambar_new.length === 0}
+						<input
+							value="Tidak ada gambar yang di upload"
+							type="text"
+							class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
+							disabled
+						/>
+					{/if}
 				</div>
 			</div>
 		{/if}
@@ -309,6 +317,20 @@
 			</div>
 		{/if}
 
+		{#if surveyData.status_verifikasi === 'V'}
+			<div>
+				<label class="text-[#18294E] font-semibold" for="verificatorName">Nama Verificator</label>
+				<input
+					id="verificatorName"
+					value={surveyData.nama_user_verify}
+					type="text"
+					placeholder="Verificator Name"
+					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
+					disabled
+				/>
+			</div>
+		{/if}
+
 		<div class="flex justify-between pt-8">
 			{#if surveyData.status_verifikasi === 'N'}
 				<div class="w-1/4"></div>
@@ -325,7 +347,7 @@
 						on:click={() => reassign(surveyData.id_transaksi_jual_sewa)}
 						class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
 					>
-						REASSIGN
+						RESURVEY
 					</button>
 				{/if}
 				<button
@@ -361,7 +383,7 @@
 						on:click={() => reassign(surveyData.id_transaksi_jual_sewa)}
 						class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
 					>
-						REASSIGN
+						RESURVEY
 					</button>
 				{/if}
 				<div class="w-1/3"></div>

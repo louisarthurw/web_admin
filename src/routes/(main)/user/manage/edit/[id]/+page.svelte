@@ -10,6 +10,7 @@
 
 	export let data;
 	const user = data.user;
+	console.log(user)
 
 	let isShowPassword = false;
 
@@ -50,7 +51,7 @@
 	class="flex flex-col bg-[#F3F4F6] p-8 w-full space-y-6"
 	style="min-height: calc(100vh - 117.6px);"
 >
-	<h1 class="text-3xl font-bold text-[#18294E]">{user.nama_lengkap}</h1>
+	<h1 class="text-3xl font-bold text-[#18294E]">Edit User</h1>
 	<form
 		class="space-y-2"
 		action="?/editUser"
@@ -86,6 +87,16 @@
 				placeholder="User ID"
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 				disabled
+			/>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="nama_lengkap">Name</label>
+			<input
+				name="nama_lengkap"
+				value={user.nama_lengkap}
+				type="text"
+				placeholder="Name"
+				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 			/>
 		</div>
 		<div>

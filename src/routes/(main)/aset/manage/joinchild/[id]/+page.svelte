@@ -11,8 +11,6 @@
 	console.log(childAsset);
 
 	let id = $page.params.id;
-
-	// let childAssets = asset.child.filter((child) => child.status === 'active');
 	let selectedIds;
 
 	if (!childAsset) {
@@ -27,61 +25,6 @@
 	const handleBack = () => {
 		goto(`/aset/manage/overview/${id}`);
 	};
-
-	// const generateNewAssetId = () => {
-	// 	let maxIdNumber = Math.max(
-	// 		...childAssets.map((child) => parseInt(child.assetId.split('.').pop()))
-	// 	);
-	// 	return `${asset.assetId}.${maxIdNumber + 1}`;
-	// };
-
-	// const handleJoin = () => {
-	// 	const uniqueIds = new Set(selectedIds);
-
-	// 	if (selectedIds.includes('')) {
-	// 		alert('Ada Asset ID yang belum dipilih!');
-	// 		return;
-	// 	}
-
-	// 	if (uniqueIds.size !== selectedIds.length) {
-	// 		alert('Asset ID yang mau di join tidak boleh ada yang sama!');
-	// 		return;
-	// 	}
-
-	// 	let selectedChilds = childAssets.filter((child) => selectedIds.includes(child.assetId));
-	// 	// console.log(selectedChilds)
-
-	// 	let joinedChild = {
-	// 		assetId: generateNewAssetId(),
-	// 		name: '-',
-	// 		type: '-',
-	// 		statusAsset: '-',
-	// 		legalityLetter: '-',
-	// 		legalityNumber: '-',
-	// 		legalityFile: '-',
-	// 		powerOfAttorney: '-',
-	// 		tags: '-',
-	// 		usage: '-',
-	// 		totalValue: selectedChilds.reduce((sum, child) => sum + child.totalValue, 0),
-	// 		totalArea: selectedChilds.reduce((sum, child) => sum + child.totalArea, 0),
-	// 		condition: '-',
-	// 		coordinateBoundaries: '-',
-	// 		idJoin: selectedChilds.map((child) => child.assetId),
-	// 		status: 'active'
-	// 	};
-	// 	// console.log('Aset yang digabung: ', joinedChild);
-
-	// 	childAssets.forEach((child) => {
-	// 		if (selectedIds.includes(child.assetId)) {
-	// 			child.status = 'inactive';
-	// 		}
-	// 	});
-
-	// 	asset.child.push(joinedChild);
-	// 	console.log('child: ', asset.child);
-
-	// 	goto(`/aset/manage/overview/${id}`);
-	// };
 
 	// const handleAddId = () => {
 	// 	if (selectedIds.length < childAssets.length) {

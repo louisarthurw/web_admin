@@ -387,9 +387,11 @@
 						{#each allClasses as kelas}
 							<option value={kelas.id}>
 								<span style="display: inline-block; min-width: 150px;">{kelas.nama}</span>
-								({kelas.modal_minimal.toLocaleString('id-ID')} - {kelas.modal_maksimal.toLocaleString(
-									'id-ID'
-								)})
+								{#if kelas.id !== 7}
+									({kelas.modal_minimal.toLocaleString('id-ID')} - {kelas.modal_maksimal.toLocaleString(
+										'id-ID'
+									)})
+								{/if}
 							</option>
 						{/each}
 					</select>

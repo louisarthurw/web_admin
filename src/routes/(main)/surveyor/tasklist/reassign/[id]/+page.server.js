@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { server } from '$lib/store';
+import { server, auth } from '$lib/store';
 import { fail, redirect } from '@sveltejs/kit';
 import { page } from '$app/stores';
 import { get } from 'svelte/store';

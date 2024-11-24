@@ -21,12 +21,12 @@
 			month: 'long',
 			year: 'numeric'
 		});
-		// const formattedTime = date.toLocaleTimeString('en-GB', {
-		// 	hour: '2-digit',
-		// 	minute: '2-digit'
-		// });
-		// return `${formattedDate}, ${formattedTime}`;
-		return `${formattedDate}`;
+		const formattedTime = date.toLocaleTimeString('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+		return `${formattedDate}, ${formattedTime}`;
+		// return `${formattedDate}`;
 	}
 </script>
 

@@ -10,7 +10,7 @@ const authValue = get(auth)
 export const load = async ({ params }) => {
     const { id } = params
 
-    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/detail/${id}`, {
+    const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/detail/allgambar/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -77,8 +77,12 @@ export const actions = {
 
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
-        const gambar_lama = entries.gambar_lama.split(",");
+
+        const gambar_lama = entries.nama_gambar.split(",");
         const gambar_new = formData.getAll('gambar_baru');
+        let status_gambar = entries.status_gambar;
+        status_gambar = status_gambar === '' ? [] : status_gambar.split(',');
+        console.log(status_gambar)
 
         const payload = new FormData();
 
@@ -142,9 +146,12 @@ export const actions = {
         if (gambar_new.length > 0) {
             gambar_new.forEach((gambar) => {
                 payload.append('GambarFile', gambar);
+                status_gambar.push('Y')
             });
+            status_gambar = status_gambar.join(',');
         }
 
+        payload.append('status_gambar', String(status_gambar))
         payload.append('status', String(entries.status));
         payload.append('alamat', String(entries.alamat));
         payload.append('provinsi', String(entries.provinsi));

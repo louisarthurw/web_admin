@@ -35,23 +35,17 @@ export const actions = {
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
-        const payload = {
-            id: parseInt(id),
-            username: entries.username,
-            password: entries.password,
-            email: entries.email,
-            no_telp: entries.phoneNumber,
-        };
+        const payload = new FormData();
+        payload.append('id', id);
+        payload.append('nama_lengkap', entries.nama_lengkap);
+        payload.append('username', entries.username);
+        payload.append('password', entries.password);
+        payload.append('email', entries.email);
+        payload.append('no_telp', entries.phoneNumber);
 
-        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/user/id`, {
+        const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/user/id/nofoto`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
-            body: JSON.stringify(payload)
+            body: payload
         });
 
         const result = await response.json();

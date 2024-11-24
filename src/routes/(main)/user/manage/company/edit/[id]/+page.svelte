@@ -10,6 +10,11 @@
 
 	export let data;
 	const company = data.company;
+	const business_field = data.business_field;
+	const all_class = data.kelas;
+
+	let selectedBusinessField = company.Field ? company.Field.map((field) => field.id) : [];
+	let selectedClass = company.kelas;
 
 	const serverDetails = get(server);
 
@@ -46,7 +51,7 @@
 	class="flex flex-col bg-[#F3F4F6] p-8 w-full space-y-6"
 	style="min-height: calc(100vh - 117.6px);"
 >
-	<h1 class="text-3xl font-bold text-[#18294E]">{company.nama}</h1>
+	<h1 class="text-3xl font-bold text-[#18294E]">Edit Company</h1>
 	<form
 		class="space-y-2"
 		action="?/editCompany"
@@ -80,6 +85,17 @@
 				value={company.id_perusahaan}
 				type="text"
 				placeholder="Company ID"
+				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
+				disabled
+			/>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="companyName">Company Name</label>
+			<input
+				name="companyName"
+				value={company.nama}
+				type="text"
+				placeholder="Company Name"
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 				disabled
 			/>
@@ -155,12 +171,12 @@
 			<label class="text-[#18294E] font-semibold" for="initialCapital">Initial Capital</label>
 			<input
 				name="initialCapital"
-				value={company.modal}
-				type="number"
-				min="0"
+				value="Rp {company.modal.toLocaleString('id-ID')}"
+				type="text"
 				placeholder="Initial Capital"
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 				required
+				disabled
 			/>
 		</div>
 		<div>
@@ -173,6 +189,50 @@
 				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
 				required
 			/>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="field">Business Field</label>
+			<div class="grid grid-cols-6 gap-4 bg-white p-3 border border-gray-300 rounded-md">
+				{#each business_field as field}
+					<div class="flex items-center">
+						<input
+							type="checkbox"
+							value={field.id}
+							checked={selectedBusinessField.includes(field.id)}
+							class="form-checkbox h-4 w-4 rounded text-[#18294E] focus:ring-0 focus:outline-none"
+							on:change={(e) => {
+								if (e.target.checked) {
+									selectedBusinessField.push(field.id);
+									selectedBusinessField = selectedBusinessField.sort((a, b) => a - b);
+								} else {
+									selectedBusinessField = selectedBusinessField.filter((t) => t !== field.id);
+									selectedBusinessField = selectedBusinessField.sort((a, b) => a - b);
+								}
+								console.log(selectedBusinessField);
+							}}
+						/>
+						<input type="hidden" name="selected_field" value={selectedBusinessField} />
+						<span class="ml-2 text-[#18294E] font-medium">{field.nama}</span>
+					</div>
+				{/each}
+			</div>
+		</div>
+		<div>
+			<label class="text-[#18294E] font-semibold" for="kelas">Class</label>
+			<select
+				name="kelas"
+				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] {selectedClass ===
+				''
+					? 'text-gray-500'
+					: 'text-[#18294E] font-semibold'}"
+				bind:value={selectedClass}
+				required
+			>
+				<option value="" class="text-gray-500" disabled selected>Choose Class</option>
+				{#each all_class as kelas}
+					<option value={kelas.id} class="text-[#18294E] font-semibold">{kelas.nama}</option>
+				{/each}
+			</select>
 		</div>
 		<div>
 			<label class="text-[#18294E] font-semibold" for="user">User</label>

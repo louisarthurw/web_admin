@@ -40,6 +40,11 @@
 		{ id: 2, name: 'Rented', value: 'T' }
 	];
 
+	let array_link_gambar = asset.link_gambar ? asset.link_gambar.map((item) => item.link_gambar) : null;
+	let array_status_gambar = asset.link_gambar ? asset.link_gambar.map((item) => item.status) : null;
+	console.log(array_link_gambar);
+	console.log(array_status_gambar);
+
 	const handleCancel = () => {
 		goto(`/aset/manage/overview/${id}`);
 	};
@@ -60,21 +65,35 @@
 		isAddingNewImage = !isAddingNewImage;
 	}
 
-	function deleteImage(gambar) {
-		Swal.fire({
-			title: 'Delete Image',
-			text: 'Are you sure you want to delete the image?',
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!',
-			cancelButtonText: 'Cancel'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				asset.link_gambar = asset.link_gambar.filter((item) => item !== gambar);
-			}
-		});
+	// function deleteImage(gambar) {
+	// 	Swal.fire({
+	// 		title: 'Delete Image',
+	// 		text: 'Are you sure you want to delete the image?',
+	// 		icon: 'warning',
+	// 		showCancelButton: true,
+	// 		confirmButtonColor: '#3085d6',
+	// 		cancelButtonColor: '#d33',
+	// 		confirmButtonText: 'Yes, delete it!',
+	// 		cancelButtonText: 'Cancel'
+	// 	}).then((result) => {
+	// 		if (result.isConfirmed) {
+	// 			asset.link_gambar = asset.link_gambar.filter((item) => item !== gambar);
+	// 		}
+	// 	});
+	// }
+
+	function setImageStatus(index, status) {
+		array_status_gambar[index] = status;
+	}
+
+	function getButtonBgColor(status, buttonType) {
+		if (status === 'Y' && buttonType === 'V') return '#28a745';
+		if (status === 'N' && buttonType === 'X') return '#dc3545';
+		return '#FFFFFF';
+	}
+
+	function getLinkGambar(asset) {
+		return asset.link_gambar.map((item) => item.link_gambar);
 	}
 </script>
 
@@ -299,9 +318,9 @@
 			<label class="text-[#18294E] font-semibold" for="image">Image</label>
 
 			<div class="flex justify-between items-end">
-				{#if asset.link_gambar}
+				{#if array_link_gambar}
 					<div class="flex flex-wrap gap-4">
-						{#each asset.link_gambar as gambar, i (gambar)}
+						{#each array_link_gambar as gambar, i (gambar)}
 							<div class="relative w-48 h-48">
 								<img
 									src={`http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`}
@@ -309,13 +328,30 @@
 									class="w-48 h-48 object-cover rounded-md"
 								/>
 
-								<button
-									type="button"
-									class="absolute top-0 right-0 bg-[#18294E] text-white px-1"
-									on:click={() => deleteImage(gambar)}
-								>
-									&times;
-								</button>
+								<div class="absolute top-0 right-0 flex">
+									<button
+										type="button"
+										class="p-1 rounded-l"
+										on:click={() => setImageStatus(i, 'N')}
+										style="background-color: {getButtonBgColor(
+											array_status_gambar[i],
+											'X'
+										)}; color: white"
+									>
+										<img src="/eye_hide.png" alt="hide" class="w-4 h-4" />
+									</button>
+									<button
+										type="button"
+										class="p-1 rounded-r"
+										on:click={() => setImageStatus(i, 'Y')}
+										style="background-color: {getButtonBgColor(
+											array_status_gambar[i],
+											'V'
+										)}; color: white"
+									>
+										<img src="/eye_show.png" alt="show" class="w-4 h-4"/>
+									</button>
+								</div>
 							</div>
 						{/each}
 					</div>
@@ -330,7 +366,8 @@
 					</button>
 				{/if}
 			</div>
-			<input type="hidden" name="gambar_lama" bind:value={asset.link_gambar} />
+			<input type="hidden" name="nama_gambar" bind:value={array_link_gambar} />
+			<input type="hidden" name="status_gambar" bind:value={array_status_gambar} />
 		</div>
 
 		{#if isAddingNewImage}
@@ -345,10 +382,6 @@
 						multiple
 						required
 					/>
-					<button
-						class="flex-none bg-[#18294E] text-white px-6 rounded-lg"
-						on:click={toggleAddNewImage}>Cancel</button
-					>
 				</div>
 			</div>
 		{/if}

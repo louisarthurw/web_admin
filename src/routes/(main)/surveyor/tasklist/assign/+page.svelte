@@ -10,20 +10,39 @@
 	const assets = data.assets;
 	const surveyors = data.surveyors;
 
-	let selectedAsset = null;
+	let selectedAssetIds;
 	let selectedSurveyor = null;
-
 	let dateline = '';
+
+	if (!assets) {
+		selectedAssetIds = [];
+	} else {
+		selectedAssetIds = [''];
+	}
 
 	const handleBack = () => {
 		goto(`/surveyor/tasklist`);
 	};
 
-	function handleSelectAsset(event) {
-		const selectedAssetId = event.target.value;
-		console.log('asset id: ', selectedAssetId);
-		selectedAsset = assets.find((asset) => asset.id_asset === parseInt(selectedAssetId));
-	}
+	// function handleSelectAsset(event) {
+	// 	const selectedAssetId = event.target.value;
+	// 	console.log('asset id: ', selectedAssetId);
+	// 	selectedAsset = assets.find((asset) => asset.id_asset === parseInt(selectedAssetId));
+	// }
+
+	const handleAddNewSelectInput = () => {
+		if (selectedAssetIds.length < assets.length) {
+			selectedAssetIds = [...selectedAssetIds, ''];
+		}
+		console.log('selected  asset ids: ', selectedAssetIds);
+	};
+
+	const handleRemoveSelectInput = (index) => {
+		if (selectedAssetIds.length > 1) {
+			selectedAssetIds = selectedAssetIds.filter((_, i) => i !== index);
+		}
+		console.log('selected  asset ids: ', selectedAssetIds);
+	};
 
 	function handleSelectSurveyor(event) {
 		const selectedSurveyorId = event.target.value;
@@ -50,12 +69,12 @@
 <Navbar2 currentPage={$page.url.pathname}></Navbar2>
 
 <div
-	class="flex flex-col bg-[#F3F4F6] p-8 w-full space-y-6"
+	class="flex flex-col bg-[#F3F4F6] p-8 w-full space-y-4"
 	style="min-height: calc(100vh - 117.6px);"
 >
 	<h1 class="text-3xl font-bold text-[#18294E]">Assign Surveyor</h1>
 	<form
-		class="flex flex-col flex-grow space-y-2"
+		class="flex flex-col flex-grow space-y-2 mt-0"
 		action="?/assignSurveyor"
 		enctype="multipart/form-data"
 		method="post"
@@ -82,94 +101,58 @@
 		}}
 	>
 		<div>
-			{#if selectedAsset}
-				<label class="text-[#18294E] font-semibold" for="selectedAsset">Selected Asset</label>
-			{/if}
-			<select
-				id="selectedAsset"
-				name="id_asset"
-				class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] {selectedAsset
-					? 'text-[#18294E] font-semibold'
-					: 'text-gray-500'}"
-				on:change={handleSelectAsset}
-				required
-			>
-				<option value="" disabled selected>Choose Asset</option>
-				{#each assets as asset}
-					<option value={asset.id_asset} class="text-[#18294E] font-semibold">{asset.nama}</option>
+			<label class="text-[#18294E] font-semibold" for="selectedAsset">Selected Asset</label>
+			{#if assets}
+				{#each selectedAssetIds as selectedAssetId, index}
+					<div class="flex items-center space-x-2">
+						<select
+							class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] {selectedAssetIds[
+								index
+							] === ''
+								? 'text-gray-500'
+								: 'text-[#18294E] font-semibold'} {index > 0 ? 'mt-2' : ''}"
+							bind:value={selectedAssetIds[index]}
+							required
+						>
+							<option value="" disabled selected>Choose Asset</option>
+							{#each assets as asset}
+								<option value={asset.id_asset} class="text-[#18294E] font-semibold"
+									>{asset.nama}</option
+								>
+							{/each}
+						</select>
+
+						<input type="hidden" name="selected_asset_id" value={selectedAssetIds} />
+
+						<button
+							type="button"
+							on:click={() => handleRemoveSelectInput(index)}
+							class="flex justify-center text-white px-6 py-3 rounded-md bg-[#18294E] font-bold {index >
+							0
+								? 'mt-2'
+								: ''}"
+						>
+							DELETE
+						</button>
+					</div>
 				{/each}
-			</select>
+
+				{#if selectedAssetIds.length < assets.length}
+					<div class="flex">
+						<button
+							type="button"
+							on:click={handleAddNewSelectInput}
+							class="text-[#18294E] font-bold text-md px-1"
+						>
+							ADD ASSET
+						</button>
+					</div>
+				{/if}
+			{/if}
 		</div>
 
-		{#if selectedAsset}
-			<div>
-				<label class="text-[#18294E] font-semibold" for="assetId">Asset ID</label>
-				<input
-					id="assetId"
-					type="text"
-					value={selectedAsset.id_asset}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					disabled
-				/>
-			</div>
-			<div>
-				<label class="text-[#18294E] font-semibold" for="location">Location</label>
-				<input
-					id="location"
-					type="text"
-					value={selectedAsset.alamat}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					disabled
-				/>
-			</div>
-			<div>
-				<label class="text-[#18294E] font-semibold" for="type">Type</label>
-				<input
-					id="type"
-					type="text"
-					value={getAssetType(selectedAsset.tipe)}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					disabled
-				/>
-			</div>
-			<div>
-				<label class="text-[#18294E] font-semibold" for="totalArea">Total Area</label>
-				<input
-					id="totalArea"
-					type="text"
-					value="{selectedAsset.luas} m²"
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					disabled
-				/>
-			</div>
-			<div>
-				<label class="text-[#18294E] font-semibold" for="coordinate">Coordinate</label>
-				<input
-					id="coordinate"
-					type="text"
-					value={selectedAsset.titik_koordinat}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					disabled
-				/>
-			</div>
-			<div>
-				<label class="text-[#18294E] font-semibold" for="coordinateBoundaries"
-					>Coordinate Boundaries</label
-				>
-				<textarea
-					id="coordinateBoundaries"
-					value={selectedAsset.batas_koordinat}
-					class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#18294E] text-[#18294E] font-semibold"
-					rows="4"
-					disabled
-				/>
-			</div>
-		{/if}
-
-		<div>
-			{#if selectedSurveyor}
-				<label class="text-[#18294E] font-semibold" for="selectedSurveyor">Selected Surveyor</label>
-			{/if}
+		<div class="mt-2">
+			<label class="text-[#18294E] font-semibold" for="selectedSurveyor">Selected Surveyor</label>
 			<select
 				id="selectedSurveyor"
 				name="user_id"
@@ -216,9 +199,7 @@
 			/>
 		</div>
 
-		{#if !selectedAsset}
-			<div class="flex-grow"></div>
-		{/if}
+		<div class="flex-grow"></div>
 
 		<div class="flex justify-between pt-8">
 			<div class="w-1/3"></div>

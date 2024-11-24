@@ -10,20 +10,30 @@ export const load = async ({ params }) => {
     const { id } = params;
 
     const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/perusahaan/detail/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*'
-        }
+        method: 'GET'
     });
 
     const result = await response.json();
     const company = result.data;
 
+    const responseBusinessField = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/business_field`, {
+        method: 'GET'
+    });
+
+    const resultBusinessField = await responseBusinessField.json();
+    const business_field = resultBusinessField.data;
+
+    const responseKelas = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/kelas`, {
+        method: 'GET'
+    });
+
+    const resultKelas = await responseKelas.json();
+    const kelas = resultKelas.data;
+
     return {
-        company: company
+        company: company,
+        business_field: business_field,
+        kelas: kelas
     }
 }
 
@@ -40,20 +50,20 @@ export const actions = {
             username: entries.username,
             lokasi: entries.location,
             tipe: entries.type,
-            modal: entries.initialCapital,
-            deskripsi: entries.description
+            deskripsi: entries.description,
+            field: entries.selected_field,
+            kelas: entries.kelas
         };
 
         console.log("payload: ", payload)
 
+        if (payload.field === '') {
+            return fail(400, { message: 'Pilih setidaknya 1 business field!' });
+        }
+
+
         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/perusahaan`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
             body: JSON.stringify(payload)
         });
 

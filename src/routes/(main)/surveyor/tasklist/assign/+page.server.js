@@ -51,8 +51,16 @@ export const actions = {
 
         const payload = new FormData();
 
+        let selected_asset_id = entries.selected_asset_id;
+        selected_asset_id = selected_asset_id.split(',')
+        const unique_id = new Set(selected_asset_id);
+
+        if (unique_id.size !== selected_asset_id.length) {
+            return fail(400, { message: 'Asset tidak boleh ada yang sama!' });
+        }
+
         payload.append('idUser', parseInt(entries.user_id));
-        payload.append('idAsset', parseInt(entries.id_asset));
+        payload.append('idAsset', selected_asset_id);
         payload.append('dateline', entries.dateline);
         payload.append('surat', entries.letterOfAssignment);
         payload.append('senderId', idAdmin);

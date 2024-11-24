@@ -42,7 +42,7 @@
 			{#each asset.link_gambar as gambar, i}
 				<img
 					src={asset.link_gambar
-						? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar}`
+						? `http://${serverDetails.hostname}:${serverDetails.port}/file?path=${gambar.link_gambar}`
 						: '/asset.jpg'}
 					alt="{asset.nama} image {i + 1}"
 					class="w-64 h-64 object-cover rounded-md"
@@ -100,6 +100,7 @@
 				/>
 				<span class="text-[#18294E]">Tidak ditawarkan</span>
 			</label>
+			<input type="hidden" name="statusAsset" value={asset.status_asset} />
 		</div>
 
 		<div class="flex-grow"></div>

@@ -31,7 +31,7 @@
 		currentPage * itemsPerPage
 	);
 
-	$: startEntry = (currentPage - 1) * itemsPerPage + 1;
+	$: startEntry = itemsPerPage > 0 ? (currentPage - 1) * itemsPerPage + 1 : (currentPage - 1) * itemsPerPage;
 	$: endEntry = Math.min(currentPage * itemsPerPage, filteredSurveyRequests.length);
 
 	function goToPage(pageNumber) {
@@ -108,7 +108,7 @@
 									class="px-2 py-1 text-sm font-semibold text-[#18294E] bg-[#F3F4F6] border-2 border-[#18294E] rounded-md"
 									disabled
 								>
-									REASSIGN
+									RESURVEY
 								</button>
 							{/if}
 						</td>

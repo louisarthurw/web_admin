@@ -39,19 +39,13 @@ export const actions = {
 
         const payload = {
             surveyreq_id: parseInt(id),
-            senderId: parseInt(idAdmin)
+            senderId: parseInt(idAdmin),
         };
 
         console.log(payload)
 
         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/verify/asset/accept`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
             body: JSON.stringify(payload)
         });
 

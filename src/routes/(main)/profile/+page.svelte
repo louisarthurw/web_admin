@@ -9,9 +9,9 @@
 	import Swal from 'sweetalert2';
 
 	export let data;
-	const admin = data.user;
+	let admin = data.user;
 	const serverDetails = get(server);
-	console.log(admin)
+	console.log(admin);
 
 	let isEditing = false;
 
@@ -70,6 +70,7 @@
 								text: result.data.message
 							}).then(() => {
 								isEditing = false;
+								admin = result.data.data;
 							});
 						} else {
 							Swal.fire({

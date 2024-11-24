@@ -51,9 +51,10 @@ export const actions = {
         });
 
         const result = await response.json();
+        console.log(result)
 
         if (result.status === 200) {
-            return { message: result.message }
+            return { message: result.message, data: result.data }
         } else {
             return fail(400, { message: result.message });
         }

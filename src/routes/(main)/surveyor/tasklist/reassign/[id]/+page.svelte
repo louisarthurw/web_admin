@@ -123,7 +123,7 @@
 	class="flex flex-col bg-[#F3F4F6] p-8 w-full space-y-6"
 	style="min-height: calc(100vh - 117.6px);"
 >
-	<h1 class="text-3xl font-bold text-[#18294E]">Reassign Surveyor</h1>
+	<h1 class="text-3xl font-bold text-[#18294E]">Resurvey</h1>
 	<form
 		class="flex flex-col flex-grow space-y-2"
 		action="?/reassignSurveyor"
@@ -136,7 +136,7 @@
 				if (result.status === 200) {
 					Swal.fire({
 						icon: 'success',
-						title: 'Berhasil reassign surveyor!',
+						title: 'Berhasil assign surveyor untuk melakukan resurvey!',
 						text: result.data.message
 					}).then(() => {
 						goto('/aset/verif');
@@ -144,7 +144,7 @@
 				} else {
 					Swal.fire({
 						icon: 'error',
-						title: 'Gagal reassign surveyor!',
+						title: 'Gagal assign surveyor untuk melakukan resurvey!',
 						text: result.data.message
 					});
 				}
@@ -341,7 +341,7 @@
 			<button
 				type="submit"
 				class="w-1/6 px-4 py-2 font-semibold text-white bg-[#18294E] rounded-md hover:bg-[#152140] transition duration-200 ml-4"
-				>REASSIGN</button
+				>RESURVEY</button
 			>
 			<div class="w-1/3"></div>
 		</div>

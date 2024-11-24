@@ -49,6 +49,8 @@ export const actions = {
         payload.append('waktu_selesai', String(entries.waktu_selesai) + ":00");
         payload.append('notes', String(entries.notes));
 
+        console.log(payload)
+
         if (entries.dokumen && entries.dokumen.size > 0) {
             payload.append('dokumen', entries.dokumen);
             payload.append('tipe_dokumen', entries.tipe_dokumen ? String(entries.tipe_dokumen) : "");

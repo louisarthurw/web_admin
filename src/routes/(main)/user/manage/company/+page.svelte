@@ -33,7 +33,7 @@
 		currentPage * itemsPerPage
 	);
 
-	$: startEntry = (currentPage - 1) * itemsPerPage + 1;
+	$: startEntry = itemsPerPage > 0 ? (currentPage - 1) * itemsPerPage + 1 : (currentPage - 1) * itemsPerPage;
 	$: endEntry = Math.min(currentPage * itemsPerPage, filteredCompanies.length);
 
 	function goToPage(pageNumber) {

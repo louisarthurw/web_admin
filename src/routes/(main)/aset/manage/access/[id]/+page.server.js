@@ -49,9 +49,15 @@ export const actions = {
         const formData = await request.formData();
         const entries = Object.fromEntries(formData);
 
+        const statusAsset = entries.statusAsset;
+
         const payload = {
             visibilitas: entries.access
         };
+
+        if (statusAsset === 'T' && payload.visibilitas === 'Y') {
+            return fail(400, { message: 'Tidak bisa mengganti akses asset karena asset sudah disewakan!' });
+        }
 
         const response = await fetch(`http://${serverDetails.hostname}:${serverDetails.port}/asset/${id}`, {
             method: 'PUT',
